@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:drawable="@drawable/icr_arrow_up" app:state_none="false" app:state_up="true"/>
+    <item android:drawable="@drawable/icr_arrow_down" app:state_down="true" app:state_none="false"/>
+    <item android:drawable="@drawable/arrow_empty" app:state_none="true"/>
+    <item android:drawable="@drawable/arrow_empty"/>
+</selector>

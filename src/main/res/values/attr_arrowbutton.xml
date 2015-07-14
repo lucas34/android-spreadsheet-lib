@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="IconButton">
+        <attr name="iconPadding" format="dimension"/>
+        <attr name="state_up" format="boolean"/>
+        <attr name="state_down" format="boolean"/>
+        <attr name="state_none" format="boolean"/>
+    </declare-styleable>
+</resources>
