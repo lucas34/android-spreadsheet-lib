@@ -18,9 +18,9 @@ package fr.nelaupe.spreadsheetlib;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,7 +49,6 @@ import fr.nelaupe.spreadsheetlib.view.DispatcherHorizontalScrollView;
 @SuppressWarnings({"unused", "unchecked"})
 public class SpreadSheetView extends LinearLayout implements View.OnClickListener {
 
-    private final int fixedRowHeight;
     private final float screenDensity;
     private final Context mContext;
     private final TableRow.LayoutParams wrapWrapTableRowParams;
@@ -65,19 +64,19 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     private OnSortingListener mSortingListener;
 
     private int mHeaderBackgroundColor;
-
     private int mHeaderTextColor;
     private int mTextColor;
 
+    private float mRowHeight;
     private float mHeaderTextSize;
     private float mTextSize;
+    private float mMinFixedRowWidth;
 
     public SpreadSheetView(Context context) {
         super(context);
         wrapWrapTableRowParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
         mContext = context;
         screenDensity = getContext().getResources().getDisplayMetrics().density;
-        fixedRowHeight = (int) (50 * screenDensity + 0.5f);
         init();
     }
 
@@ -86,7 +85,6 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         wrapWrapTableRowParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
         mContext = context;
         screenDensity = getContext().getResources().getDisplayMetrics().density;
-        fixedRowHeight = (int) (50 * screenDensity + 0.5f);
         parseAttribute(context, attrs);
         init();
     }
@@ -96,7 +94,6 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         wrapWrapTableRowParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
         mContext = context;
         screenDensity = getContext().getResources().getDisplayMetrics().density;
-        fixedRowHeight = (int) (50 * screenDensity + 0.5f);
         parseAttribute(context, attrs);
         init();
     }
@@ -107,7 +104,6 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         wrapWrapTableRowParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
         mContext = context;
         screenDensity = getContext().getResources().getDisplayMetrics().density;
-        fixedRowHeight = (int) (50 * screenDensity + 0.5f);
         parseAttribute(context, attrs);
         init();
     }
@@ -120,15 +116,19 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         for (int i = 0; i < N; ++i) {
             int attr = a.getIndex(i);
             if (attr == R.styleable.sheet_headerColor) {
-                mHeaderBackgroundColor = Color.parseColor(a.getString(attr));
+                mHeaderBackgroundColor = a.getColor(attr, 0);
             } else if (attr == R.styleable.sheet_headerTextSize) {
-                mHeaderTextSize = a.getFloat(attr, 0);
+                mHeaderTextSize = a.getDimensionPixelSize(attr, 0);
             } else if (attr == R.styleable.sheet_textSize) {
-                mTextSize = a.getFloat(attr, 0);
+                mTextSize = a.getDimensionPixelSize(attr, 0);
             } else if (attr == R.styleable.sheet_textColor) {
-                mTextColor = Color.parseColor(a.getString(attr));
+                mTextColor = a.getColor(attr, 0);
             } else if (attr == R.styleable.sheet_headerTextColor) {
-                mHeaderTextColor = Color.parseColor(a.getString(attr));
+                mHeaderTextColor = a.getColor(attr, 0);
+            } else if (attr == R.styleable.sheet_rowHeight) {
+                mRowHeight = a.getDimensionPixelSize(attr, 0);
+            } else if (attr == R.styleable.sheet_minFixedRowWidth) {
+                mMinFixedRowWidth = a.getDimensionPixelSize(attr, 0);
             }
         }
         a.recycle();
@@ -194,16 +194,16 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         return (mTextSize == 0) ? getResources().getDimension(R.dimen.text) : mTextSize;
     }
 
-    public void setTextSize(int mTextSize) {
-        this.mTextSize = mTextSize;
+    public void setTextSize(int textSize) {
+        this.mTextSize = textSize;
     }
 
     public float getHeaderTextSize() {
         return (mHeaderTextSize == 0) ? getResources().getDimension(R.dimen.text) : mHeaderTextSize;
     }
 
-    public void setHeaderTextSize(int mHeaderTextSize) {
-        this.mHeaderTextSize = mHeaderTextSize;
+    public void setHeaderTextSize(int headerTextSize) {
+        this.mHeaderTextSize = headerTextSize;
     }
 
     public int getTextColor() {
@@ -218,8 +218,28 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         return (mHeaderTextColor == 0) ? getResources().getColor(R.color.white) : mHeaderTextColor;
     }
 
-    public void setHeaderTextColor(int mHeaderTextColor) {
-        this.mHeaderTextColor = mHeaderTextColor;
+    public void setHeaderTextColor(int headerTextColor) {
+        this.mHeaderTextColor = headerTextColor;
+    }
+
+    public int getRowHeight() {
+        return (int) ((mRowHeight == 0) ? getResources().getDimension(R.dimen.rowHeight) : mRowHeight);
+    }
+
+    public void setRowHeight(float rowHeight) {
+        mRowHeight = computeSize(rowHeight);
+    }
+
+    public int getMinFixedRowWidth() {
+        return (int) ((mMinFixedRowWidth == 0) ? getResources().getDimension(R.dimen.minFixedRowWidth) : mMinFixedRowWidth);
+    }
+
+    public void setMinFixedRowWidth(float minFixedRowWidth) {
+        mMinFixedRowWidth = computeSize(minFixedRowWidth);
+    }
+
+    private int computeSize(float size) {
+        return (int) (size * screenDensity + 0.5f);
     }
 
     /*
@@ -273,15 +293,14 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         row.setLayoutParams(wrapWrapTableRowParams);
         row.setGravity(Gravity.CENTER);
         row.setBackgroundColor(getHeaderColor());
-        int pixels = (int) (100 * screenDensity + 0.5f);
         for (String name : mFixedViewData.keySet()) {
             TextView textView = new TextView(mContext);
             textView.setText(name);
             textView.setTextColor(getHeaderTextColor());
-            textView.setTextSize(getHeaderTextSize());
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getHeaderTextSize());
             textView.setGravity(Gravity.CENTER);
-            textView.setWidth(pixels);
-            textView.setHeight(fixedRowHeight);
+            textView.setWidth(getMinFixedRowWidth());
+            textView.setHeight(getRowHeight());
             row.addView(textView);
         }
 
@@ -299,14 +318,13 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
             for (Annotation annotation : field.getDeclaredAnnotations()) {
                 if (annotation instanceof SpreadSheetCell) {
                     SpreadSheetCell trueField = (SpreadSheetCell) annotation;
-                    int pixels = (int) (trueField.size() * screenDensity + 0.5f);
                     ArrowButton button = new ArrowButton(mContext);
-                    button.setWidth(pixels);
-                    button.setHeight(fixedRowHeight);
+                    button.setWidth(computeSize(trueField.size()));
+                    button.setHeight(getRowHeight());
                     button.setTextColor(getHeaderTextColor());
                     button.setBackground(null);
                     button.setText(trueField.name());
-                    button.setTextSize(getHeaderTextSize());
+                    button.setTextSize(TypedValue.COMPLEX_UNIT_PX, getHeaderTextSize());
                     button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icr_arrow_selector_sort, 0, R.drawable.arrow_empty, 0);
                     button.setOnClickListener(this);
                     button.setId(R.id.filter);
@@ -323,12 +341,11 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         row.setLayoutParams(wrapWrapTableRowParams);
         row.setGravity(Gravity.CENTER);
         row.setBackgroundColor(mContext.getResources().getColor(colorBool ? R.color.white : R.color.grey_cell));
-        int pixels = (int) (100 * screenDensity + 0.5f);
         for (Map.Entry<String, Integer> entry : mFixedViewData.entrySet()) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view = inflater.inflate(entry.getValue(), null);
-            view.setMinimumHeight(fixedRowHeight);
-            view.setMinimumWidth(pixels);
+            view.setMinimumHeight(getRowHeight());
+            view.setMinimumWidth(getMinFixedRowWidth());
             row.addView(view);
         }
 
@@ -357,13 +374,12 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
                             SpreadSheetCell spreadSheetCell = (SpreadSheetCell) annotation;
                             TextView recyclableTextView = new TextView(mContext);
                             Object object = field.get(resource);
-                            int pixels = (int) (spreadSheetCell.size() * screenDensity + 0.5f);
                             recyclableTextView.setText((object == null ? "" : object.toString()));
                             recyclableTextView.setTextColor(getTextColor());
                             recyclableTextView.setGravity(Gravity.CENTER);
-                            recyclableTextView.setTextSize(getTextSize());
-                            recyclableTextView.setWidth(pixels);
-                            recyclableTextView.setHeight(fixedRowHeight);
+                            recyclableTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextSize());
+                            recyclableTextView.setWidth(computeSize(spreadSheetCell.size()));
+                            recyclableTextView.setHeight(getRowHeight());
                             row.addView(recyclableTextView);
                         }
                     }
