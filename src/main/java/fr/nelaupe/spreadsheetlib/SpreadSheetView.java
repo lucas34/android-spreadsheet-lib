@@ -49,7 +49,8 @@ import fr.nelaupe.spreadsheetlib.view.DispatcherHorizontalScrollView;
 @SuppressWarnings({"unused", "unchecked"})
 public class SpreadSheetView extends LinearLayout implements View.OnClickListener {
 
-    private static final int fixedRowHeight = 50;
+    private final int fixedRowHeight;
+    private final float screenDensity;
     private final Context mContext;
     private final TableRow.LayoutParams wrapWrapTableRowParams;
     private List<SpreadSheetData> mData;
@@ -75,6 +76,8 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         super(context);
         wrapWrapTableRowParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
         mContext = context;
+        screenDensity = getContext().getResources().getDisplayMetrics().density;
+        fixedRowHeight = (int) (50 * screenDensity + 0.5f);
         init();
     }
 
@@ -82,6 +85,8 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         super(context, attrs);
         wrapWrapTableRowParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
         mContext = context;
+        screenDensity = getContext().getResources().getDisplayMetrics().density;
+        fixedRowHeight = (int) (50 * screenDensity + 0.5f);
         parseAttribute(context, attrs);
         init();
     }
@@ -90,6 +95,8 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         super(context, attrs, defStyleAttr);
         wrapWrapTableRowParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
         mContext = context;
+        screenDensity = getContext().getResources().getDisplayMetrics().density;
+        fixedRowHeight = (int) (50 * screenDensity + 0.5f);
         parseAttribute(context, attrs);
         init();
     }
@@ -99,6 +106,8 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         super(context, attrs, defStyleAttr, defStyleRes);
         wrapWrapTableRowParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
         mContext = context;
+        screenDensity = getContext().getResources().getDisplayMetrics().density;
+        fixedRowHeight = (int) (50 * screenDensity + 0.5f);
         parseAttribute(context, attrs);
         init();
     }
@@ -264,14 +273,14 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         row.setLayoutParams(wrapWrapTableRowParams);
         row.setGravity(Gravity.CENTER);
         row.setBackgroundColor(getHeaderColor());
-
+        int pixels = (int) (100 * screenDensity + 0.5f);
         for (String name : mFixedViewData.keySet()) {
             TextView textView = new TextView(mContext);
             textView.setText(name);
             textView.setTextColor(getHeaderTextColor());
             textView.setTextSize(getHeaderTextSize());
             textView.setGravity(Gravity.CENTER);
-            textView.setWidth(100);
+            textView.setWidth(pixels);
             textView.setHeight(fixedRowHeight);
             row.addView(textView);
         }
@@ -290,8 +299,9 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
             for (Annotation annotation : field.getDeclaredAnnotations()) {
                 if (annotation instanceof SpreadSheetCell) {
                     SpreadSheetCell trueField = (SpreadSheetCell) annotation;
+                    int pixels = (int) (trueField.size() * screenDensity + 0.5f);
                     ArrowButton button = new ArrowButton(mContext);
-                    button.setWidth(trueField.size());
+                    button.setWidth(pixels);
                     button.setHeight(fixedRowHeight);
                     button.setTextColor(getHeaderTextColor());
                     button.setBackground(null);
@@ -313,12 +323,12 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         row.setLayoutParams(wrapWrapTableRowParams);
         row.setGravity(Gravity.CENTER);
         row.setBackgroundColor(mContext.getResources().getColor(colorBool ? R.color.white : R.color.grey_cell));
-
+        int pixels = (int) (100 * screenDensity + 0.5f);
         for (Map.Entry<String, Integer> entry : mFixedViewData.entrySet()) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view = inflater.inflate(entry.getValue(), null);
             view.setMinimumHeight(fixedRowHeight);
-            view.setMinimumWidth(100);
+            view.setMinimumWidth(pixels);
             row.addView(view);
         }
 
@@ -347,11 +357,12 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
                             SpreadSheetCell spreadSheetCell = (SpreadSheetCell) annotation;
                             TextView recyclableTextView = new TextView(mContext);
                             Object object = field.get(resource);
+                            int pixels = (int) (spreadSheetCell.size() * screenDensity + 0.5f);
                             recyclableTextView.setText((object == null ? "" : object.toString()));
                             recyclableTextView.setTextColor(getTextColor());
                             recyclableTextView.setGravity(Gravity.CENTER);
                             recyclableTextView.setTextSize(getTextSize());
-                            recyclableTextView.setWidth(spreadSheetCell.size());
+                            recyclableTextView.setWidth(pixels);
                             recyclableTextView.setHeight(fixedRowHeight);
                             row.addView(recyclableTextView);
                         }
