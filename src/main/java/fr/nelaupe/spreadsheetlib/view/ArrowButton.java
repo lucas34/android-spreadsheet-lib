@@ -23,6 +23,8 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.Button;
 
+import java.util.Locale;
+
 import fr.nelaupe.spreadsheetlib.R;
 
 /**
@@ -31,49 +33,45 @@ import fr.nelaupe.spreadsheetlib.R;
  * Date 26/03/15
  */
 public class ArrowButton extends Button {
+
     private static final int[] state_up = new int[]{R.attr.state_up};
     private static final int[] state_down = new int[]{R.attr.state_down};
     private static final int[] state_none = new int[]{R.attr.state_none};
 
     private int drawableWidth;
-    private DrawablePositions drawablePosition;
     private int iconPadding;
 
     private states currentState;
-
-    private Rect bounds;
+    private Rect mBounds;
 
     public ArrowButton(Context context) {
         super(context);
-        bounds = new Rect();
     }
 
     public ArrowButton(Context context, AttributeSet attrs) {
         super(context, attrs);
-        bounds = new Rect();
         applyAttributes(attrs);
+        mBounds = new Rect();
     }
 
     public ArrowButton(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        bounds = new Rect();
         applyAttributes(attrs);
+        mBounds = new Rect();
     }
 
     private void applyAttributes(AttributeSet attrs) {
-        if (null == bounds) {
-            bounds = new Rect();
-        }
-
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.IconButton);
         int paddingId = typedArray.getDimensionPixelSize(R.styleable.IconButton_iconPadding, 0);
         setIconPadding(paddingId);
         typedArray.recycle();
+        mBounds = new Rect();
     }
 
     private void setIconPadding(int padding) {
         iconPadding = padding;
         requestLayout();
+        mBounds = new Rect();
     }
 
     @Override
@@ -103,49 +101,24 @@ public class ArrowButton extends Button {
         super.onLayout(changed, left, top, right, bottom);
 
         Paint textPaint = getPaint();
-        String text = getText().toString();
-        textPaint.getTextBounds(text, 0, text.length(), bounds);
+        String text = getText().toString().toUpperCase(Locale.getDefault());
+        textPaint.getTextBounds(text, 0, text.length(), mBounds);
 
-        int textWidth = bounds.width();
-        int factor = (drawablePosition == DrawablePositions.LEFT_AND_RIGHT) ? 2 : 1;
-        int contentWidth = drawableWidth + iconPadding * factor + textWidth;
-        int horizontalPadding = (int) ((getWidth() / 2.0) - (contentWidth / 2.0));
+        int textWidth = mBounds.width();
+        int contentWidth = drawableWidth * 2 + iconPadding * 2 + textWidth;
 
-        setCompoundDrawablePadding(-horizontalPadding + iconPadding);
+        int contentLeft = (int)((getWidth() / 2.0) - (contentWidth / 2.0));
+        setCompoundDrawablePadding(-contentLeft + iconPadding * 2);
+        setPadding(contentLeft, getPaddingTop(), contentLeft, getPaddingBottom());
 
-        switch (drawablePosition) {
-            case LEFT:
-                setPadding(horizontalPadding, getPaddingTop(), 0, getPaddingBottom());
-                break;
-
-            case RIGHT:
-                setPadding(0, getPaddingTop(), horizontalPadding, getPaddingBottom());
-                break;
-
-            case LEFT_AND_RIGHT:
-                setPadding(horizontalPadding, getPaddingTop(), horizontalPadding, getPaddingBottom());
-                break;
-
-            default:
-                setPadding(0, getPaddingTop(), 0, getPaddingBottom());
-        }
     }
 
     @Override
     public void setCompoundDrawablesWithIntrinsicBounds(Drawable left, Drawable top, Drawable right, Drawable bottom) {
         super.setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom);
 
-        if (left != null && right != null) {
-            drawableWidth = left.getIntrinsicWidth() + right.getIntrinsicWidth();
-            drawablePosition = DrawablePositions.LEFT_AND_RIGHT;
-        } else if (left != null) {
+        if (left != null) {
             drawableWidth = left.getIntrinsicWidth();
-            drawablePosition = DrawablePositions.LEFT;
-        } else if (right != null) {
-            drawableWidth = right.getIntrinsicWidth();
-            drawablePosition = DrawablePositions.RIGHT;
-        } else {
-            drawablePosition = DrawablePositions.NONE;
         }
 
         requestLayout();
@@ -162,10 +135,4 @@ public class ArrowButton extends Button {
         NONE
     }
 
-    private enum DrawablePositions {
-        NONE,
-        LEFT_AND_RIGHT,
-        LEFT,
-        RIGHT
-    }
 }
