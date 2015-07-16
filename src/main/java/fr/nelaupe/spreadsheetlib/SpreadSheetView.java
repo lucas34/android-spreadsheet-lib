@@ -25,6 +25,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -299,13 +300,14 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         row.setGravity(Gravity.CENTER);
         row.setBackgroundColor(getHeaderColor());
         for (String name : mFixedViewData.keySet()) {
-            TextView textView = new TextView(mContext);
+            Button textView = new Button(mContext);
             textView.setText(name);
             textView.setTextColor(getHeaderTextColor());
             textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getHeaderTextSize());
             textView.setGravity(Gravity.CENTER);
             textView.setWidth(getMinFixedRowWidth());
             textView.setHeight(getRowHeight());
+            textView.setBackground(null);
             row.addView(textView);
         }
 
