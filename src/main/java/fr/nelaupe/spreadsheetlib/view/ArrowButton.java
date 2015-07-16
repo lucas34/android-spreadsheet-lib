@@ -42,22 +42,23 @@ public class ArrowButton extends Button {
     private int iconPadding;
 
     private states currentState;
-    private Rect mBounds;
+    private final Rect mBounds;
 
     public ArrowButton(Context context) {
         super(context);
+        mBounds = new Rect();
     }
 
     public ArrowButton(Context context, AttributeSet attrs) {
         super(context, attrs);
-        applyAttributes(attrs);
         mBounds = new Rect();
+        applyAttributes(attrs);
     }
 
     public ArrowButton(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        applyAttributes(attrs);
         mBounds = new Rect();
+        applyAttributes(attrs);
     }
 
     private void applyAttributes(AttributeSet attrs) {
@@ -65,13 +66,11 @@ public class ArrowButton extends Button {
         int paddingId = typedArray.getDimensionPixelSize(R.styleable.IconButton_iconPadding, 0);
         setIconPadding(paddingId);
         typedArray.recycle();
-        mBounds = new Rect();
     }
 
     private void setIconPadding(int padding) {
         iconPadding = padding;
         requestLayout();
-        mBounds = new Rect();
     }
 
     @Override
