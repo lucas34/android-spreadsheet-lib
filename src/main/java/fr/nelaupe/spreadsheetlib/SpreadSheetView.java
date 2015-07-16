@@ -19,6 +19,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -253,8 +254,12 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         if (i == R.id.filter) {
             SpreadSheetData cls = mData.get(0);
             try {
-                Comparator<SpreadSheetData> comparator = (Comparator<SpreadSheetData>) cls.getClass().getDeclaredField(String.valueOf(v.getTag(R.id.filter_name))).get(mData.get(0));
-                doSorting(v, comparator);
+                String filterName = String.valueOf(v.getTag(R.id.filter_name));
+                if(!TextUtils.isEmpty(filterName)) {
+                    Comparator<SpreadSheetData> comparator = (Comparator<SpreadSheetData>) cls.getClass().getDeclaredField(filterName).get(mData.get(0));
+                    doSorting(v, comparator);
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
