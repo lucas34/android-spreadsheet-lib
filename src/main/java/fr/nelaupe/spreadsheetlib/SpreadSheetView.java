@@ -335,7 +335,9 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
                     button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icr_arrow_selector_sort, 0, R.drawable.arrow_empty, 0);
                     button.setOnClickListener(this);
                     button.setId(R.id.filter);
-                    button.setTag(R.id.filter_name, trueField.filterName());
+                    if(!TextUtils.isEmpty(trueField.filterName())) {
+                        button.setTag(R.id.filter_name, trueField.filterName());
+                    }
                     row.addView(button);
                 }
             }
