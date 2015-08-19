@@ -1,6 +1,0 @@
-<resources>
-    <dimen name="text">15sp</dimen>
-    <dimen name="rowHeight">50dp</dimen>
-    <dimen name="minFixedRowWidth">100dp</dimen>
-
-</resources>
