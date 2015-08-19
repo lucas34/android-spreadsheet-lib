@@ -16,15 +16,15 @@ import fr.nelaupe.spreadsheetlib.SpreadSheetData;
 @SuppressWarnings("unused")
 public class Data extends SpreadSheetData {
 
-    @SpreadSheetCell(name = "column1", size = 300, filterName = "COMPARE_COLUMN1")
-    public String column1;
+    @SpreadSheetCell(name = "id", size = 300, filterName = "COMPARE_COLUMN1")
+    public Integer column1;
     public static final Comparator<Data> COMPARE_COLUMN1 = new Comparator<Data>() {
         public int compare(Data lhs, Data rhs) {
             return lhs.column1.compareTo(rhs.column1);
         }
     };
 
-    @SpreadSheetCell(name = "column2", size = 300, filterName = "COMPARE_COLUMN2")
+    @SpreadSheetCell(name = "First Name", size = 300, filterName = "COMPARE_COLUMN2")
     public String column2;
     public static final Comparator<Data> COMPARE_COLUMN2 = new Comparator<Data>() {
         public int compare(Data lhs, Data rhs) {
@@ -32,7 +32,7 @@ public class Data extends SpreadSheetData {
         }
     };
 
-    @SpreadSheetCell(name = "column3", size = 300, filterName = "COMPARE_COLUMN3")
+    @SpreadSheetCell(name = "Last Name", size = 300, filterName = "COMPARE_COLUMN3")
     public String column3;
     public static final Comparator<Data> COMPARE_COLUMN3 = new Comparator<Data>() {
         public int compare(Data lhs, Data rhs) {
@@ -40,7 +40,7 @@ public class Data extends SpreadSheetData {
         }
     };
 
-    @SpreadSheetCell(name = "column4", size = 300, filterName = "COMPARE_COLUMN4")
+    @SpreadSheetCell(name = "Number", size = 300, filterName = "COMPARE_COLUMN4")
     public String column4;
     public static final Comparator<Data> COMPARE_COLUMN4 = new Comparator<Data>() {
         public int compare(Data lhs, Data rhs) {
@@ -48,7 +48,7 @@ public class Data extends SpreadSheetData {
         }
     };
 
-    @SpreadSheetCell(name = "column5", size = 300, filterName = "COMPARE_COLUMN5")
+    @SpreadSheetCell(name = "Company", size = 300, filterName = "COMPARE_COLUMN5")
     public String column5;
     public static final Comparator<Data> COMPARE_COLUMN5 = new Comparator<Data>() {
         public int compare(Data lhs, Data rhs) {
@@ -56,7 +56,7 @@ public class Data extends SpreadSheetData {
         }
     };
 
-    @SpreadSheetCell(name = "column6", size = 300, filterName = "COMPARE_COLUMN6")
+    @SpreadSheetCell(name = "Birth date", size = 300, filterName = "COMPARE_COLUMN6")
     public String column6;
     public static final Comparator<Data> COMPARE_COLUMN6 = new Comparator<Data>() {
         public int compare(Data lhs, Data rhs) {
@@ -64,27 +64,11 @@ public class Data extends SpreadSheetData {
         }
     };
 
-    @SpreadSheetCell(name = "column7", size = 300, filterName = "COMPARE_COLUMN7")
+    @SpreadSheetCell(name = "Email", size = 300, filterName = "COMPARE_COLUMN7")
     public String column7;
     public static final Comparator<Data> COMPARE_COLUMN7 = new Comparator<Data>() {
         public int compare(Data lhs, Data rhs) {
             return lhs.column7.compareTo(rhs.column7);
-        }
-    };
-
-    @SpreadSheetCell(name = "column8", size = 300, filterName = "COMPARE_COLUMN8")
-    public String column8;
-    public static final Comparator<Data> COMPARE_COLUMN8 = new Comparator<Data>() {
-        public int compare(Data lhs, Data rhs) {
-            return lhs.column8.compareTo(rhs.column8);
-        }
-    };
-
-    @SpreadSheetCell(name = "column9", size = 300, filterName = "COMPARE_COLUMN9")
-    public String column9;
-    public static final Comparator<Data> COMPARE_COLUMN9 = new Comparator<Data>() {
-        public int compare(Data lhs, Data rhs) {
-            return lhs.column9.compareTo(rhs.column9);
         }
     };
 

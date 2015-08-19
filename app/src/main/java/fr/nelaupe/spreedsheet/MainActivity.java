@@ -3,13 +3,11 @@ package fr.nelaupe.spreedsheet;
 import android.app.Activity;
 import android.os.Bundle;
 
-import java.util.Random;
+import org.fluttercode.datafactory.impl.DataFactory;
 
 import fr.nelaupe.spreadsheetlib.SpreadSheetView;
 
 public class MainActivity extends Activity {
-
-    private final Random mRand = new Random();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,26 +17,21 @@ public class MainActivity extends Activity {
         SpreadSheetView spreadSheetView = (SpreadSheetView) findViewById(R.id.spread_sheet);
 
         for (int i = 0; i < 30; i++) {
+            DataFactory df = new DataFactory();
+
             Data data = new Data();
-            data.column1 = getRandom();
-            data.column2 = getRandom();
-            data.column3 = getRandom();
-            data.column4 = getRandom();
-            data.column5 = getRandom();
-            data.column6 = getRandom();
-            data.column7 = getRandom();
-            data.column8 = getRandom();
-            data.column9 = getRandom();
+            data.column1 = i;
+            data.column2 = df.getFirstName();
+            data.column3 = df.getLastName();
+            data.column4 = df.getCity();
+            data.column5 = df.getBusinessName();
+            data.column6 = df.getBirthDate().toString();
+            data.column7 = df.getEmailAddress();
             spreadSheetView.add(data);
         }
 
         spreadSheetView.invalidate();
 
-    }
-
-    private String getRandom() {
-        int myRandomNumber = mRand.nextInt(0x10) + 0x10;
-        return Integer.toHexString(myRandomNumber);
     }
 
 }
