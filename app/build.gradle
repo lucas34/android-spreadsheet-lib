@@ -29,6 +29,6 @@ android {
 }
 
 dependencies {
-    compile project(':library')
+    compile project(':spreadsheet')
     compile 'org.fluttercode.datafactory:datafactory:0.8'
 }
