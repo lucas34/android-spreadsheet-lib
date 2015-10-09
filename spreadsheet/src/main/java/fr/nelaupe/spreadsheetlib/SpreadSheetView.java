@@ -169,21 +169,21 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         invalidate();
     }
 
-    /**
+    /*
      * With auto adaptor
      */
     public List<? extends SpreadSheetData> getData() {
         return mAdaptor.getData();
     }
 
-    /**
+    /*
      * With auto adaptor
      */
     public void add(SpreadSheetData data) {
         mAdaptor.add(data);
     }
 
-    /**
+    /*
      * With auto adaptor
      */
     public void addAll(List<SpreadSheetData> data) {

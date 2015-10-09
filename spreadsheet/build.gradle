@@ -102,6 +102,7 @@ android.libraryVariants.all { variant ->
         task("javadoc${variant.name.capitalize()}", type: Javadoc) {
             description "Generates Javadoc for $variant.name."
             source = variant.javaCompile.source
+            options.addStringOption('Xdoclint:none', '-quiet')
             ext.androidJar = project.androidSdkDir + "/platforms/${android.compileSdkVersion}/android.jar"
             classpath = files(variant.javaCompile.classpath.files) + files(ext.androidJar)
         }
