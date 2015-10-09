@@ -333,10 +333,8 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         row.setBackgroundColor(getHeaderColor());
 
         for (Field field : cls.getClass().getDeclaredFields()) {
-
             if(field.isAnnotationPresent(SpreadSheetCell.class)) {
                 SpreadSheetCell spreadSheetCell = field.getAnnotation(SpreadSheetCell.class);
-
                 ArrowButton button = new ArrowButton(mContext);
                 button.setWidth(computeSize(spreadSheetCell.size()));
                 button.setHeight(getRowHeight());
@@ -357,10 +355,8 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
                 if(!TextUtils.isEmpty(spreadSheetCell.filterName())) {
                     button.setTag(R.id.filter_name, spreadSheetCell.filterName());
                 }
-//                button.invalidate();
                 row.addView(button);
             }
-
         }
         mHeader.addView(row);
     }
