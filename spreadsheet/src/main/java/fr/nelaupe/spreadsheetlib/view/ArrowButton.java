@@ -38,13 +38,11 @@ public class ArrowButton extends Button {
     private static final int[] state_up = new int[]{R.attr.state_up};
     private static final int[] state_down = new int[]{R.attr.state_down};
     private static final int[] state_none = new int[]{R.attr.state_none};
-
+    private final Rect mBounds;
     private int drawableWidth;
     private int iconPadding;
     private int textGravity;
-
     private states currentState;
-    private final Rect mBounds;
 
     public ArrowButton(Context context) {
         super(context);
@@ -110,17 +108,17 @@ public class ArrowButton extends Button {
 
         int textWidth = (int) textPaint.measureText(getText().toString());
 
-        int compute = getWidth() - drawableWidth - iconPadding  - textWidth;
+        int compute = getWidth() - drawableWidth - iconPadding - textWidth;
         int compoundDrawablePadding = -compute + iconPadding;
 
-        if(((textGravity & Gravity.LEFT) == Gravity.LEFT) || ((textGravity & Gravity.START) == Gravity.START)) {
+        if (((textGravity & Gravity.LEFT) == Gravity.LEFT) || ((textGravity & Gravity.START) == Gravity.START)) {
             setCompoundDrawablePadding(compoundDrawablePadding - getPaddingLeft());
-            setPadding(getPaddingLeft(), getPaddingTop(), compute - getPaddingLeft(),  getPaddingBottom());
-        } else if(((textGravity & Gravity.RIGHT) == Gravity.RIGHT) || ((textGravity & Gravity.END) == Gravity.END)) {
+            setPadding(getPaddingLeft(), getPaddingTop(), compute - getPaddingLeft(), getPaddingBottom());
+        } else if (((textGravity & Gravity.RIGHT) == Gravity.RIGHT) || ((textGravity & Gravity.END) == Gravity.END)) {
             setCompoundDrawablePadding(compoundDrawablePadding + getPaddingRight());
             setPadding(compute + getPaddingLeft(), getPaddingTop(), getPaddingRight(), getPaddingBottom());
         } else {
-            int contentLeft = (int)((getWidth() / 2.0) - drawableWidth - iconPadding - textWidth / 2);
+            int contentLeft = (int) ((getWidth() / 2.0) - drawableWidth - iconPadding - textWidth / 2);
             setCompoundDrawablePadding(-contentLeft + iconPadding);
             setPadding(contentLeft, getPaddingTop(), contentLeft, getPaddingBottom());
         }

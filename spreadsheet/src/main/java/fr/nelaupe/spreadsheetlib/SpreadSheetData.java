@@ -32,7 +32,7 @@ public abstract class SpreadSheetData {
         mComparators = comparators;
     }
 
-    public Class<? extends SpreadSheetComparators> getComparatorsClass () {
+    public Class<? extends SpreadSheetComparators> getComparatorsClass() {
         return mComparators;
     }
 

@@ -46,16 +46,6 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
 
     public abstract View getView(SpreadSheetCell cell, Object object);
 
-    public void onRowClick(int position) {
-        if (mItemClickListener != null) {
-            mItemClickListener.onItemClick(get(position));
-        }
-    }
-
-    public void setOnItemClickListener(OnItemClickListener<TSelf> listener) {
-        mItemClickListener = listener;
-    }
-
     public void setOnSortingListener(OnSortingListener mSortingListener) {
         this.mSortingListener = mSortingListener;
     }
@@ -66,4 +56,11 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
         }
     }
 
+    public void setOnItemClickListener(OnItemClickListener<TSelf> listener) {
+        mItemClickListener = listener;
+    }
+
+    public OnItemClickListener<TSelf> getItemClickListener() {
+        return mItemClickListener;
+    }
 }

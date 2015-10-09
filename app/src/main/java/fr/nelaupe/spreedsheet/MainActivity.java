@@ -37,7 +37,7 @@ public class MainActivity extends Activity {
         }
     }
 
-    private void initSpreadSheetWithAdaptor(SpreadSheetView spreadSheetView ) {
+    private void initSpreadSheetWithAdaptor(SpreadSheetView spreadSheetView) {
         CustomCellAdaptor cellAdaptor = new CustomCellAdaptor();
         for (int i = 0; i < 30; i++) {
             cellAdaptor.add(generateDummyData(i));
@@ -66,20 +66,7 @@ public class MainActivity extends Activity {
         data.column7 = df.getEmailAddress();
         data.column8 = i % 3 == 0;
 
-        return  data;
-    }
-
-
-    private class CustomCellAdaptor extends SpreadSheetAdaptor<Data> {
-
-        @Override
-        public View getView(SpreadSheetCell cell, Object object) {
-            if(object.getClass().equals(Boolean.class)) {
-                return inflateCheckbox((Boolean) object);
-            } else {
-                return inflateTextView(object.toString());
-            }
-        }
+        return data;
     }
 
     private View inflateTextView(String text) {
@@ -92,11 +79,23 @@ public class MainActivity extends Activity {
         return view;
     }
 
-    private View inflateCheckbox(Boolean bool){
+    private View inflateCheckbox(Boolean bool) {
         CheckBox checkBox = new CheckBox(MainActivity.this);
         checkBox.setChecked(bool);
         checkBox.setEnabled(false);
         return checkBox;
+    }
+
+    private class CustomCellAdaptor extends SpreadSheetAdaptor<Data> {
+
+        @Override
+        public View getView(SpreadSheetCell cell, Object object) {
+            if (object.getClass().equals(Boolean.class)) {
+                return inflateCheckbox((Boolean) object);
+            } else {
+                return inflateTextView(object.toString());
+            }
+        }
     }
 
 }

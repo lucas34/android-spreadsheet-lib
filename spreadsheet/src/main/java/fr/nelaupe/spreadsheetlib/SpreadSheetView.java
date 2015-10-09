@@ -49,6 +49,7 @@ import fr.nelaupe.spreadsheetlib.view.DispatcherHorizontalScrollView;
 @SuppressWarnings({"unused", "unchecked"})
 public class SpreadSheetView extends LinearLayout implements View.OnClickListener {
 
+    private static final int mDefaultTextGravity = Gravity.LEFT | Gravity.CENTER_VERTICAL;
     private final float screenDensity;
     private final Context mContext;
     private final TableRow.LayoutParams wrapWrapTableRowParams;
@@ -59,22 +60,17 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     private TableLayout mTable;
     private TableLayout mFixed;
     private TableLayout mFixedHeader;
-
     private int mHeaderBackgroundColor;
     private int mHeaderTextColor;
     private int mTextColor;
     private int mTextGravity;
-
     private float mRowHeight;
     private float mHeaderTextSize;
     private float mTextSize;
     private float mMinFixedRowWidth;
     private int mTextPaddingLeft;
     private int mTextPaddingRight;
-
     private SpreadSheetAdaptor<SpreadSheetData> mAdaptor;
-
-    private static final int mDefaultTextGravity = Gravity.LEFT|Gravity.CENTER_VERTICAL;
 
     public SpreadSheetView(Context context) {
         super(context);
@@ -137,9 +133,9 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
                 mRowHeight = a.getDimensionPixelSize(attr, 0);
             } else if (attr == R.styleable.sheet_minFixedRowWidth) {
                 mMinFixedRowWidth = a.getDimensionPixelSize(attr, 0);
-            }  else if (attr == R.styleable.sheet_textPaddingRight) {
+            } else if (attr == R.styleable.sheet_textPaddingRight) {
                 mTextPaddingRight = a.getDimensionPixelSize(attr, 0);
-            }  else if (attr == R.styleable.sheet_textPaddingLeft) {
+            } else if (attr == R.styleable.sheet_textPaddingLeft) {
                 mTextPaddingLeft = a.getDimensionPixelSize(attr, 0);
             }
         }
@@ -260,11 +256,6 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         return (int) (size * screenDensity + 0.5f);
     }
 
-    public void setTextGravity(int gravity) {
-        mTextGravity = gravity;
-        wrapWrapTableRowParams.gravity = gravity;
-    }
-
     /*
      *  Click
      */
@@ -277,8 +268,8 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
             SpreadSheetData cls = mAdaptor.getData().get(0);
             try {
                 String filterName = String.valueOf(v.getTag(R.id.filter_name));
-                if(!TextUtils.isEmpty(filterName)) {
-                    if(cls.hasComparators()) {
+                if (!TextUtils.isEmpty(filterName)) {
+                    if (cls.hasComparators()) {
                         Comparator<SpreadSheetData> comparator = (Comparator<SpreadSheetData>) cls.getComparatorsClass().getDeclaredField(filterName).get(cls);
                         doSorting(v, comparator);
                     } else {
@@ -293,7 +284,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
 
         } else if (i == R.id.item) {
             Integer position = (Integer) v.getTag(R.id.item_number);
-            mAdaptor.onRowClick(position);
+            mAdaptor.getItemClickListener().onItemClick(mAdaptor.get(position));
         }
     }
 
@@ -328,7 +319,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         row.setBackgroundColor(getHeaderColor());
 
         for (Field field : cls.getClass().getDeclaredFields()) {
-            if(field.isAnnotationPresent(SpreadSheetCell.class)) {
+            if (field.isAnnotationPresent(SpreadSheetCell.class)) {
                 SpreadSheetCell spreadSheetCell = field.getAnnotation(SpreadSheetCell.class);
                 ArrowButton button = new ArrowButton(mContext);
                 button.setWidth(computeSize(spreadSheetCell.size()));
@@ -338,9 +329,9 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
                 button.setText(spreadSheetCell.name());
                 button.setTextSize(TypedValue.COMPLEX_UNIT_PX, getHeaderTextSize());
                 button.setTextGravity(mTextGravity);
-                if(((mTextGravity & Gravity.LEFT) == Gravity.LEFT) || ((mTextGravity & Gravity.START) == Gravity.START)) {
+                if (((mTextGravity & Gravity.LEFT) == Gravity.LEFT) || ((mTextGravity & Gravity.START) == Gravity.START)) {
                     button.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icr_arrow_selector_sort, 0);
-                } else if(((mTextGravity & Gravity.RIGHT) == Gravity.RIGHT) || ((mTextGravity & Gravity.END) == Gravity.END)) {
+                } else if (((mTextGravity & Gravity.RIGHT) == Gravity.RIGHT) || ((mTextGravity & Gravity.END) == Gravity.END)) {
                     button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icr_arrow_selector_sort, 0, 0, 0);
                 } else {
                     button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.arrow_empty, 0, R.drawable.icr_arrow_selector_sort, 0);
@@ -348,7 +339,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
                 button.setPadding(mTextPaddingLeft, 0, mTextPaddingRight, 0);
                 button.setOnClickListener(this);
                 button.setId(R.id.filter);
-                if(!TextUtils.isEmpty(spreadSheetCell.filterName())) {
+                if (!TextUtils.isEmpty(spreadSheetCell.filterName())) {
                     button.setTag(R.id.filter_name, spreadSheetCell.filterName());
                 }
                 row.addView(button);
@@ -390,7 +381,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
             row.setPadding(mTextPaddingLeft, 0, mTextPaddingRight, 0);
 
             for (Field field : resource.getClass().getDeclaredFields()) {
-                if(field.isAnnotationPresent(SpreadSheetCell.class)) {
+                if (field.isAnnotationPresent(SpreadSheetCell.class)) {
                     SpreadSheetCell spreadSheetCell = field.getAnnotation(SpreadSheetCell.class);
                     try {
                         Object object = field.get(resource);
@@ -486,6 +477,11 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         return mTextGravity;
     }
 
+    public void setTextGravity(int gravity) {
+        mTextGravity = gravity;
+        wrapWrapTableRowParams.gravity = gravity;
+    }
+
     public int getTextPaddingLeft() {
         return mTextPaddingLeft;
     }
@@ -495,7 +491,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     }
 
     public void setAdaptor(SpreadSheetAdaptor adaptor) {
-        if(mAdaptor != null && adaptor.getData().size() == 0) {
+        if (mAdaptor != null && adaptor.getData().size() == 0) {
             adaptor.addAll(mAdaptor.getData());
         }
         mAdaptor = adaptor;
