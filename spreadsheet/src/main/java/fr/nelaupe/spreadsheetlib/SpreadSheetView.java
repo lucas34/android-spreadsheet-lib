@@ -268,8 +268,13 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
             try {
                 String filterName = String.valueOf(v.getTag(R.id.filter_name));
                 if(!TextUtils.isEmpty(filterName)) {
-                    Comparator<SpreadSheetData> comparator = (Comparator<SpreadSheetData>) cls.getClass().getDeclaredField(filterName).get(mData.get(0));
-                    doSorting(v, comparator);
+                    if(cls.hasComparators()) {
+                        Comparator<SpreadSheetData> comparator = (Comparator<SpreadSheetData>) cls.getComparatorsClass().getDeclaredField(filterName).get(mData.get(0));
+                        doSorting(v, comparator);
+                    } else {
+                        Comparator<SpreadSheetData> comparator = (Comparator<SpreadSheetData>) cls.getClass().getDeclaredField(filterName).get(mData.get(0));
+                        doSorting(v, comparator);
+                    }
                 }
 
             } catch (Exception e) {

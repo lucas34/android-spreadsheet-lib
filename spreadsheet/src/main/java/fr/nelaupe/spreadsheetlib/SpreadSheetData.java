@@ -21,4 +21,23 @@ package fr.nelaupe.spreadsheetlib;
  * Date 26/03/15
  */
 public abstract class SpreadSheetData {
+
+    private Class<? extends SpreadSheetComparators> mComparators;
+
+    public SpreadSheetData() {
+
+    }
+
+    public SpreadSheetData(Class<? extends SpreadSheetComparators> comparators) {
+        mComparators = comparators;
+    }
+
+    public Class<? extends SpreadSheetComparators> getComparatorsClass () {
+        return mComparators;
+    }
+
+    public boolean hasComparators() {
+        return mComparators != null;
+    }
+
 }

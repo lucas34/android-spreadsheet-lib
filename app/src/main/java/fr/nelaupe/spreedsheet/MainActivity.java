@@ -19,7 +19,7 @@ public class MainActivity extends Activity {
         for (int i = 0; i < 30; i++) {
             DataFactory df = new DataFactory();
 
-            Data data = new Data();
+            Data data = new Data(Comparators.class);
             data.column1 = i;
             data.column2 = df.getFirstName();
             data.column3 = df.getLastName();
