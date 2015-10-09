@@ -31,7 +31,6 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -322,25 +321,26 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         row.setBackgroundColor(getHeaderColor());
 
         for (Field field : cls.getClass().getDeclaredFields()) {
-            for (Annotation annotation : field.getDeclaredAnnotations()) {
-                if (annotation instanceof SpreadSheetCell) {
-                    SpreadSheetCell trueField = (SpreadSheetCell) annotation;
-                    ArrowButton button = new ArrowButton(mContext);
-                    button.setWidth(computeSize(trueField.size()));
-                    button.setHeight(getRowHeight());
-                    button.setTextColor(getHeaderTextColor());
-                    button.setBackground(null);
-                    button.setText(trueField.name());
-                    button.setTextSize(TypedValue.COMPLEX_UNIT_PX, getHeaderTextSize());
-                    button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icr_arrow_selector_sort, 0, R.drawable.arrow_empty, 0);
-                    button.setOnClickListener(this);
-                    button.setId(R.id.filter);
-                    if(!TextUtils.isEmpty(trueField.filterName())) {
-                        button.setTag(R.id.filter_name, trueField.filterName());
-                    }
-                    row.addView(button);
+
+            if(field.isAnnotationPresent(SpreadSheetCell.class)) {
+                SpreadSheetCell spreadSheetCell = field.getAnnotation(SpreadSheetCell.class);
+
+                ArrowButton button = new ArrowButton(mContext);
+                button.setWidth(computeSize(spreadSheetCell.size()));
+                button.setHeight(getRowHeight());
+                button.setTextColor(getHeaderTextColor());
+                button.setBackground(null);
+                button.setText(spreadSheetCell.name());
+                button.setTextSize(TypedValue.COMPLEX_UNIT_PX, getHeaderTextSize());
+                button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icr_arrow_selector_sort, 0, R.drawable.arrow_empty, 0);
+                button.setOnClickListener(this);
+                button.setId(R.id.filter);
+                if(!TextUtils.isEmpty(spreadSheetCell.filterName())) {
+                    button.setTag(R.id.filter_name, spreadSheetCell.filterName());
                 }
+                row.addView(button);
             }
+
         }
         mHeader.addView(row);
     }
@@ -377,23 +377,21 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
             row.setOnClickListener(this);
 
             for (Field field : resource.getClass().getDeclaredFields()) {
-                try {
-                    for (Annotation annotation : field.getDeclaredAnnotations()) {
-                        if (annotation instanceof SpreadSheetCell) {
-                            SpreadSheetCell spreadSheetCell = (SpreadSheetCell) annotation;
-                            TextView recyclableTextView = new TextView(mContext);
-                            Object object = field.get(resource);
-                            recyclableTextView.setText((object == null ? "" : object.toString()));
-                            recyclableTextView.setTextColor(getTextColor());
-                            recyclableTextView.setGravity(Gravity.CENTER);
-                            recyclableTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextSize());
-                            recyclableTextView.setWidth(computeSize(spreadSheetCell.size()));
-                            recyclableTextView.setHeight(getRowHeight());
-                            row.addView(recyclableTextView);
-                        }
+                if(field.isAnnotationPresent(SpreadSheetCell.class)) {
+                    SpreadSheetCell spreadSheetCell = field.getAnnotation(SpreadSheetCell.class);
+                    try {
+                        TextView recyclableTextView = new TextView(mContext);
+                        Object object = field.get(resource);
+                        recyclableTextView.setText((object == null ? "" : object.toString()));
+                        recyclableTextView.setTextColor(getTextColor());
+                        recyclableTextView.setGravity(Gravity.CENTER);
+                        recyclableTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextSize());
+                        recyclableTextView.setWidth(computeSize(spreadSheetCell.size()));
+                        recyclableTextView.setHeight(getRowHeight());
+                        row.addView(recyclableTextView);
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
                     }
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
                 }
             }
 
