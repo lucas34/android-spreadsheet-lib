@@ -21,7 +21,7 @@ public class Data extends SpreadSheetData {
         super(comparators);
     }
 
-    @SpreadSheetCell(name = "id", size = 300, filterName = "COMPARE_COLUMN1")
+    @SpreadSheetCell(name = "ID", size = 100, filterName = "COMPARE_COLUMN1")
     public Integer column1;
 
     @SpreadSheetCell(name = "First Name", size = 300, filterName = "COMPARE_COLUMN2")
