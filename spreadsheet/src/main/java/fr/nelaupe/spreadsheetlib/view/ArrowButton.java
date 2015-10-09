@@ -114,11 +114,11 @@ public class ArrowButton extends Button {
         int compoundDrawablePadding = -compute + iconPadding;
 
         if(((textGravity & Gravity.LEFT) == Gravity.LEFT) || ((textGravity & Gravity.START) == Gravity.START)) {
-            setCompoundDrawablePadding(compoundDrawablePadding);
-            setPadding(0, getPaddingTop(), compute,  getPaddingBottom());
+            setCompoundDrawablePadding(compoundDrawablePadding - getPaddingLeft());
+            setPadding(getPaddingLeft(), getPaddingTop(), compute - getPaddingLeft(),  getPaddingBottom());
         } else if(((textGravity & Gravity.RIGHT) == Gravity.RIGHT) || ((textGravity & Gravity.END) == Gravity.END)) {
-            setCompoundDrawablePadding(compoundDrawablePadding);
-            setPadding(compute, getPaddingTop(), 0, getPaddingBottom());
+            setCompoundDrawablePadding(compoundDrawablePadding + getPaddingRight());
+            setPadding(compute + getPaddingLeft(), getPaddingTop(), getPaddingRight(), getPaddingBottom());
         } else {
             int contentLeft = (int)((getWidth() / 2.0) - drawableWidth - iconPadding - textWidth / 2);
             setCompoundDrawablePadding(-contentLeft + iconPadding);

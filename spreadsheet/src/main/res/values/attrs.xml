@@ -8,6 +8,8 @@
         <attr name="rowHeight" format="dimension"/>
         <attr name="headerTextSize" format="dimension"/>
         <attr name="minFixedRowWidth" format="dimension"/>
+        <attr name="textPaddingLeft" format="dimension"/>
+        <attr name="textPaddingRight" format="dimension"/>
         <!--<attr name="textGravity" format="integer"/>-->
     </declare-styleable>
 </resources>

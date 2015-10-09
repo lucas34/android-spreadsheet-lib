@@ -73,6 +73,8 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     private float mHeaderTextSize;
     private float mTextSize;
     private float mMinFixedRowWidth;
+    private int mTextPaddingLeft;
+    private int mTextPaddingRight;
 
     private static final int mDefaultTextGravity = Gravity.LEFT|Gravity.CENTER_VERTICAL;
 
@@ -137,6 +139,10 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
                 mRowHeight = a.getDimensionPixelSize(attr, 0);
             } else if (attr == R.styleable.sheet_minFixedRowWidth) {
                 mMinFixedRowWidth = a.getDimensionPixelSize(attr, 0);
+            }  else if (attr == R.styleable.sheet_textPaddingRight) {
+                mTextPaddingRight = a.getDimensionPixelSize(attr, 0);
+            }  else if (attr == R.styleable.sheet_textPaddingLeft) {
+                mTextPaddingLeft = a.getDimensionPixelSize(attr, 0);
             }
         }
         a.recycle();
@@ -269,10 +275,10 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
                 String filterName = String.valueOf(v.getTag(R.id.filter_name));
                 if(!TextUtils.isEmpty(filterName)) {
                     if(cls.hasComparators()) {
-                        Comparator<SpreadSheetData> comparator = (Comparator<SpreadSheetData>) cls.getComparatorsClass().getDeclaredField(filterName).get(mData.get(0));
+                        Comparator<SpreadSheetData> comparator = (Comparator<SpreadSheetData>) cls.getComparatorsClass().getDeclaredField(filterName).get(cls);
                         doSorting(v, comparator);
                     } else {
-                        Comparator<SpreadSheetData> comparator = (Comparator<SpreadSheetData>) cls.getClass().getDeclaredField(filterName).get(mData.get(0));
+                        Comparator<SpreadSheetData> comparator = (Comparator<SpreadSheetData>) cls.getClass().getDeclaredField(filterName).get(cls);
                         doSorting(v, comparator);
                     }
                 }
@@ -355,6 +361,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
                 } else {
                     button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.arrow_empty, 0, R.drawable.icr_arrow_selector_sort, 0);
                 }
+                button.setPadding(mTextPaddingLeft, 0, mTextPaddingRight, 0);
                 button.setOnClickListener(this);
                 button.setId(R.id.filter);
                 if(!TextUtils.isEmpty(spreadSheetCell.filterName())) {
@@ -409,6 +416,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
                         recyclableTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextSize());
                         recyclableTextView.setWidth(computeSize(spreadSheetCell.size()));
                         recyclableTextView.setHeight(getRowHeight());
+                        recyclableTextView.setPadding(mTextPaddingLeft, 0, mTextPaddingRight, 0);
                         row.addView(recyclableTextView);
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();

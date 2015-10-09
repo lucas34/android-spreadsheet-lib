@@ -19,6 +19,7 @@
         sheet:rowHeight="50dp"
         sheet:textColor="@color/text"
         sheet:textSize="15sp"
+        sheet:textPaddingLeft="15dp"
         />
 
 </LinearLayout>
