@@ -42,4 +42,8 @@ public class Data extends SpreadSheetData {
     @SpreadSheetCell(name = "Email", size = 300, filterName = "COMPARE_COLUMN7")
     public String column7;
 
+    @SpreadSheetCell(name = "Is Male?", size = 80, filterName = "")
+    public boolean column8;
+
+
 }

@@ -32,7 +32,6 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -53,7 +52,6 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     private final float screenDensity;
     private final Context mContext;
     private final TableRow.LayoutParams wrapWrapTableRowParams;
-    private List<SpreadSheetData> mData;
     private Map<String, Integer> mFixedViewData;
     private String mPreviousID;
     private boolean mInvert;
@@ -75,6 +73,8 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     private float mMinFixedRowWidth;
     private int mTextPaddingLeft;
     private int mTextPaddingRight;
+
+    private SpreadSheetAdaptor mAdaptor;
 
     private static final int mDefaultTextGravity = Gravity.LEFT|Gravity.CENTER_VERTICAL;
 
@@ -149,11 +149,11 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     }
 
     private void init() {
-        mData = new ArrayList<>();
         mFixedViewData = new HashMap<>();
         mPreviousID = "";
         mInvert = false;
         wrapWrapTableRowParams.gravity = mTextGravity;
+        mAdaptor = new SimpleTextAdaptor();
 
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View inflatedView = inflater.inflate(R.layout.spread_sheet_layout, this, true);
@@ -176,17 +176,27 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
 
     /*
      *  Data
+     * Deprecated : Please use the adaptor instead
      */
+    @Deprecated
     public List<? extends SpreadSheetData> getData() {
-        return mData;
+        return mAdaptor.getData();
     }
 
+    /**
+     * Deprecated : Please use the adaptor instead
+     */
+    @Deprecated
     public void add(SpreadSheetData data) {
-        mData.add(data);
+        mAdaptor.add(data);
     }
 
+    /**
+     * Deprecated : Please use the adaptor instead
+     */
+    @Deprecated
     public void addAll(List<? extends SpreadSheetData> data) {
-        mData.addAll(data);
+        mAdaptor.addAll(data);
     }
 
     public void addFixedView(String name, int layout) {
@@ -270,7 +280,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         int i = v.getId();
 
         if (i == R.id.filter) {
-            SpreadSheetData cls = mData.get(0);
+            SpreadSheetData cls = mAdaptor.getData().get(0);
             try {
                 String filterName = String.valueOf(v.getTag(R.id.filter_name));
                 if(!TextUtils.isEmpty(filterName)) {
@@ -337,7 +347,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     }
 
     private void addHeader() {
-        SpreadSheetData cls = mData.get(0);
+        SpreadSheetData cls = mAdaptor.getData().get(0);
         TableRow row = new TableRow(mContext);
         row.setLayoutParams(wrapWrapTableRowParams);
         row.setGravity(mTextGravity);
@@ -392,7 +402,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     private void addRow() {
         Boolean colorBool = true;
         int nb = 0;
-        for (SpreadSheetData resource : mData) {
+        for (SpreadSheetData resource : mAdaptor.getData()) {
 
             AddFixedRow(colorBool);
 
@@ -403,21 +413,16 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
             row.setId(R.id.item);
             row.setTag(R.id.item_data, resource);
             row.setOnClickListener(this);
+            row.setPadding(mTextPaddingLeft, 0, mTextPaddingRight, 0);
 
             for (Field field : resource.getClass().getDeclaredFields()) {
                 if(field.isAnnotationPresent(SpreadSheetCell.class)) {
                     SpreadSheetCell spreadSheetCell = field.getAnnotation(SpreadSheetCell.class);
                     try {
-                        TextView recyclableTextView = new TextView(mContext);
                         Object object = field.get(resource);
-                        recyclableTextView.setText((object == null ? "" : object.toString()));
-                        recyclableTextView.setTextColor(getTextColor());
-                        recyclableTextView.setGravity(mTextGravity);
-                        recyclableTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextSize());
-                        recyclableTextView.setWidth(computeSize(spreadSheetCell.size()));
-                        recyclableTextView.setHeight(getRowHeight());
-                        recyclableTextView.setPadding(mTextPaddingLeft, 0, mTextPaddingRight, 0);
-                        row.addView(recyclableTextView);
+                        View view = mAdaptor.getView(spreadSheetCell, object);
+                        view.setMinimumWidth(computeSize(spreadSheetCell.size()));
+                        row.addView(view);
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                     }
@@ -430,12 +435,13 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         }
     }
 
+    @Deprecated
     public void clearData() {
-        mData = new ArrayList<>();
+        mAdaptor.clearData();
     }
 
     public void invalidate() {
-        if (mData.isEmpty()) return;
+        if (mAdaptor.getData().isEmpty()) return;
 
         mFixedHeader.removeAllViews();
         mHeader.removeAllViews();
@@ -458,7 +464,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
      *  Sorting
      */
     private void invert(View v) {
-        Collections.reverse(mData);
+        Collections.reverse(mAdaptor.getData());
         if (!mInvert) {
             setArrowDown((ArrowButton) v);
         } else {
@@ -471,7 +477,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         setArrowUP((ArrowButton) v);
         mPreviousID = String.valueOf(v.getTag(R.id.filter_name));
         mInvert = false;
-        Collections.sort(mData, comparator);
+        Collections.sort(mAdaptor.getData(), comparator);
     }
 
     private void doSorting(View v, Comparator<SpreadSheetData> comparator) {
@@ -500,6 +506,40 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     private void setArrowUP(ArrowButton view) {
         resetArrow();
         view.setState(ArrowButton.states.UP);
+    }
+
+    public int getTextGravity() {
+        return mTextGravity;
+    }
+
+    public int getTextPaddingLeft() {
+        return mTextPaddingLeft;
+    }
+
+    public int getTextPaddingRight() {
+        return mTextPaddingRight;
+    }
+
+    public void setAdaptor(SpreadSheetAdaptor adaptor) {
+        if(mAdaptor != null) {
+            adaptor.addAll(mAdaptor.getData());
+        }
+        mAdaptor = adaptor;
+    }
+
+    private class SimpleTextAdaptor extends SpreadSheetAdaptor {
+
+        @Override
+        public View getView(SpreadSheetCell cell, Object object) {
+            TextView recyclableTextView = new TextView(mContext);
+            recyclableTextView.setText((object == null ? "" : object.toString()));
+            recyclableTextView.setTextColor(getTextColor());
+            recyclableTextView.setGravity(mTextGravity);
+            recyclableTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextSize());
+            recyclableTextView.setWidth(computeSize(cell.size()));
+            recyclableTextView.setHeight(getRowHeight());
+            return recyclableTextView;
+        }
     }
 
 }
