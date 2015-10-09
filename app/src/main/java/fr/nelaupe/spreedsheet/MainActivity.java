@@ -13,7 +13,6 @@ import org.fluttercode.datafactory.impl.DataFactory;
 import fr.nelaupe.spreadsheetlib.OnItemClickListener;
 import fr.nelaupe.spreadsheetlib.SpreadSheetAdaptor;
 import fr.nelaupe.spreadsheetlib.SpreadSheetCell;
-import fr.nelaupe.spreadsheetlib.SpreadSheetData;
 import fr.nelaupe.spreadsheetlib.SpreadSheetView;
 
 public class MainActivity extends Activity {
@@ -29,10 +28,6 @@ public class MainActivity extends Activity {
 //        initSpreadSheetWithAdaptor(spreadSheetView);
 
         spreadSheetView.invalidate();
-    }
-
-    private class Test extends SpreadSheetData {
-
     }
 
     // Simple but not flexible. Create only text row.
