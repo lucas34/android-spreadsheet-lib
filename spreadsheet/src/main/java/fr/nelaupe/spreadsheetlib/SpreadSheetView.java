@@ -91,6 +91,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         init();
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public SpreadSheetView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         wrapWrapTableRowParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, mDefaultTextGravity);
@@ -304,7 +305,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
             textView.setGravity(mTextGravity);
             textView.setWidth(getMinFixedRowWidth());
             textView.setHeight(getRowHeight());
-            textView.setBackground(null);
+            textView.setBackgroundResource(0);
             row.addView(textView);
         }
 
@@ -325,7 +326,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
                 button.setWidth(computeSize(spreadSheetCell.size()));
                 button.setHeight(getRowHeight());
                 button.setTextColor(getHeaderTextColor());
-                button.setBackground(null);
+                button.setBackgroundResource(0);
                 button.setText(spreadSheetCell.name());
                 button.setTextSize(TypedValue.COMPLEX_UNIT_PX, getHeaderTextSize());
                 button.setTextGravity(mTextGravity);
