@@ -521,7 +521,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     }
 
     public void setAdaptor(SpreadSheetAdaptor adaptor) {
-        if(mAdaptor != null) {
+        if(mAdaptor != null && adaptor.getData().size() == 0) {
             adaptor.addAll(mAdaptor.getData());
         }
         mAdaptor = adaptor;
