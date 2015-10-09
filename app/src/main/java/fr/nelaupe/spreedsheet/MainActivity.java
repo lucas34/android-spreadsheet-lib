@@ -22,26 +22,45 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         SpreadSheetView spreadSheetView = (SpreadSheetView) findViewById(R.id.spread_sheet);
-        CustomCellAdaptor cellAdaptor = new CustomCellAdaptor();
 
+//        initSpreadSheet(spreadSheetView);
+        initSpreadSheetWithAdaptor(spreadSheetView);
+
+        spreadSheetView.invalidate();
+    }
+
+    // Simple but not flexible. Create only text row.
+    @Deprecated
+    private void initSpreadSheet(SpreadSheetView spreadSheetView) {
         for (int i = 0; i < 30; i++) {
-            DataFactory df = new DataFactory();
+            spreadSheetView.add(generateDummyData(i));
+        }
+    }
 
-            Data data = new Data(Comparators.class);
-            data.column1 = i;
-            data.column2 = df.getFirstName();
-            data.column3 = df.getLastName();
-            data.column4 = df.getCity();
-            data.column5 = df.getBusinessName();
-            data.column6 = df.getBirthDate().toString();
-            data.column7 = df.getEmailAddress();
-            data.column8 = i % 3 == 0;
-            cellAdaptor.add(data);
+    private void initSpreadSheetWithAdaptor(SpreadSheetView spreadSheetView ) {
+        CustomCellAdaptor cellAdaptor = new CustomCellAdaptor();
+        for (int i = 0; i < 30; i++) {
+            cellAdaptor.add(generateDummyData(i));
         }
         spreadSheetView.setAdaptor(cellAdaptor);
-        spreadSheetView.invalidate();
-
     }
+
+    private Data generateDummyData(int i) {
+        DataFactory df = new DataFactory();
+
+        Data data = new Data(Comparators.class);
+        data.column1 = i;
+        data.column2 = df.getFirstName();
+        data.column3 = df.getLastName();
+        data.column4 = df.getCity();
+        data.column5 = df.getBusinessName();
+        data.column6 = df.getBirthDate().toString();
+        data.column7 = df.getEmailAddress();
+        data.column8 = i % 3 == 0;
+
+        return  data;
+    }
+
 
     private class CustomCellAdaptor extends SpreadSheetAdaptor {
 
