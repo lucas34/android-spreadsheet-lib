@@ -21,6 +21,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.widget.Button;
 
 import java.util.Locale;
@@ -40,6 +41,7 @@ public class ArrowButton extends Button {
 
     private int drawableWidth;
     private int iconPadding;
+    private int textGravity;
 
     private states currentState;
     private final Rect mBounds;
@@ -99,17 +101,29 @@ public class ArrowButton extends Button {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
 
+        setGravity(textGravity);
+
         Paint textPaint = getPaint();
+        textPaint.setTextSize(getTextSize());
         String text = getText().toString().toUpperCase(Locale.getDefault());
         textPaint.getTextBounds(text, 0, text.length(), mBounds);
 
-        int textWidth = mBounds.width();
-        int contentWidth = drawableWidth * 2 + iconPadding * 2 + textWidth;
+        int textWidth = (int) textPaint.measureText(getText().toString());
 
-        int contentLeft = (int)((getWidth() / 2.0) - (contentWidth / 2.0));
-        setCompoundDrawablePadding(-contentLeft + iconPadding * 2);
-        setPadding(contentLeft, getPaddingTop(), contentLeft, getPaddingBottom());
+        int compute = getWidth() - drawableWidth - iconPadding  - textWidth;
+        int compoundDrawablePadding = -compute + iconPadding;
 
+        if(((textGravity & Gravity.LEFT) == Gravity.LEFT) || ((textGravity & Gravity.START) == Gravity.START)) {
+            setCompoundDrawablePadding(compoundDrawablePadding);
+            setPadding(0, getPaddingTop(), compute,  getPaddingBottom());
+        } else if(((textGravity & Gravity.RIGHT) == Gravity.RIGHT) || ((textGravity & Gravity.END) == Gravity.END)) {
+            setCompoundDrawablePadding(compoundDrawablePadding);
+            setPadding(compute, getPaddingTop(), 0, getPaddingBottom());
+        } else {
+            int contentLeft = (int)((getWidth() / 2.0) - drawableWidth - iconPadding - textWidth / 2);
+            setCompoundDrawablePadding(-contentLeft + iconPadding);
+            setPadding(contentLeft, getPaddingTop(), contentLeft, getPaddingBottom());
+        }
     }
 
     @Override
@@ -118,6 +132,8 @@ public class ArrowButton extends Button {
 
         if (left != null) {
             drawableWidth = left.getIntrinsicWidth();
+        } else if (right != null) {
+            drawableWidth = right.getIntrinsicWidth();
         }
 
         requestLayout();
@@ -126,6 +142,10 @@ public class ArrowButton extends Button {
     public void setState(states state) {
         currentState = state;
         refreshDrawableState();
+    }
+
+    public void setTextGravity(int gravity) {
+        textGravity = gravity;
     }
 
     public enum states {

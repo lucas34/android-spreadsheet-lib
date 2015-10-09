@@ -67,6 +67,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     private int mHeaderBackgroundColor;
     private int mHeaderTextColor;
     private int mTextColor;
+    private int mTextGravity;
 
     private float mRowHeight;
     private float mHeaderTextSize;
@@ -78,6 +79,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         wrapWrapTableRowParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
         mContext = context;
         screenDensity = getContext().getResources().getDisplayMetrics().density;
+        mTextGravity = Gravity.CENTER;
         init();
     }
 
@@ -86,6 +88,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         wrapWrapTableRowParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
         mContext = context;
         screenDensity = getContext().getResources().getDisplayMetrics().density;
+        mTextGravity = Gravity.CENTER;
         parseAttribute(context, attrs);
         init();
     }
@@ -95,6 +98,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         wrapWrapTableRowParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
         mContext = context;
         screenDensity = getContext().getResources().getDisplayMetrics().density;
+        mTextGravity = Gravity.CENTER;
         parseAttribute(context, attrs);
         init();
     }
@@ -105,6 +109,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         wrapWrapTableRowParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
         mContext = context;
         screenDensity = getContext().getResources().getDisplayMetrics().density;
+        mTextGravity = Gravity.CENTER;
         parseAttribute(context, attrs);
         init();
     }
@@ -140,7 +145,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         mFixedViewData = new HashMap<>();
         mPreviousID = "";
         mInvert = false;
-        wrapWrapTableRowParams.gravity = Gravity.CENTER;
+        wrapWrapTableRowParams.gravity = mTextGravity;
 
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View inflatedView = inflater.inflate(R.layout.spread_sheet_layout, this, true);
@@ -243,6 +248,11 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         return (int) (size * screenDensity + 0.5f);
     }
 
+    public void setTextGravity(int gravity) {
+        mTextGravity = gravity;
+        wrapWrapTableRowParams.gravity = gravity;
+    }
+
     /*
      *  Click
      */
@@ -296,14 +306,14 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     private void addFixedHeader() {
         TableRow row = new TableRow(mContext);
         row.setLayoutParams(wrapWrapTableRowParams);
-        row.setGravity(Gravity.CENTER);
+        row.setGravity(mTextGravity);
         row.setBackgroundColor(getHeaderColor());
         for (String name : mFixedViewData.keySet()) {
             Button textView = new Button(mContext);
             textView.setText(name);
             textView.setTextColor(getHeaderTextColor());
             textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getHeaderTextSize());
-            textView.setGravity(Gravity.CENTER);
+            textView.setGravity(mTextGravity);
             textView.setWidth(getMinFixedRowWidth());
             textView.setHeight(getRowHeight());
             textView.setBackground(null);
@@ -317,7 +327,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         SpreadSheetData cls = mData.get(0);
         TableRow row = new TableRow(mContext);
         row.setLayoutParams(wrapWrapTableRowParams);
-        row.setGravity(Gravity.CENTER);
+        row.setGravity(mTextGravity);
         row.setBackgroundColor(getHeaderColor());
 
         for (Field field : cls.getClass().getDeclaredFields()) {
@@ -332,12 +342,20 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
                 button.setBackground(null);
                 button.setText(spreadSheetCell.name());
                 button.setTextSize(TypedValue.COMPLEX_UNIT_PX, getHeaderTextSize());
-                button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icr_arrow_selector_sort, 0, R.drawable.arrow_empty, 0);
+                button.setTextGravity(mTextGravity);
+                if(((mTextGravity & Gravity.LEFT) == Gravity.LEFT) || ((mTextGravity & Gravity.START) == Gravity.START)) {
+                    button.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icr_arrow_selector_sort, 0);
+                } else if(((mTextGravity & Gravity.RIGHT) == Gravity.RIGHT) || ((mTextGravity & Gravity.END) == Gravity.END)) {
+                    button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icr_arrow_selector_sort, 0, 0, 0);
+                } else {
+                    button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.arrow_empty, 0, R.drawable.icr_arrow_selector_sort, 0);
+                }
                 button.setOnClickListener(this);
                 button.setId(R.id.filter);
                 if(!TextUtils.isEmpty(spreadSheetCell.filterName())) {
                     button.setTag(R.id.filter_name, spreadSheetCell.filterName());
                 }
+                button.invalidate();
                 row.addView(button);
             }
 
@@ -348,7 +366,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     private void AddFixedRow(boolean colorBool) {
         TableRow row = new TableRow(mContext);
         row.setLayoutParams(wrapWrapTableRowParams);
-        row.setGravity(Gravity.CENTER);
+        row.setGravity(mTextGravity);
         row.setBackgroundColor(mContext.getResources().getColor(colorBool ? R.color.white : R.color.grey_cell));
         for (Map.Entry<String, Integer> entry : mFixedViewData.entrySet()) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -370,7 +388,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
 
             TableRow row = new TableRow(mContext);
             row.setLayoutParams(wrapWrapTableRowParams);
-            row.setGravity(Gravity.CENTER);
+            row.setGravity(mTextGravity);
             row.setBackgroundColor(mContext.getResources().getColor(colorBool ? R.color.white : R.color.grey_cell));
             row.setId(R.id.item);
             row.setTag(R.id.item_data, resource);
@@ -384,7 +402,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
                         Object object = field.get(resource);
                         recyclableTextView.setText((object == null ? "" : object.toString()));
                         recyclableTextView.setTextColor(getTextColor());
-                        recyclableTextView.setGravity(Gravity.CENTER);
+                        recyclableTextView.setGravity(mTextGravity);
                         recyclableTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextSize());
                         recyclableTextView.setWidth(computeSize(spreadSheetCell.size()));
                         recyclableTextView.setHeight(getRowHeight());
