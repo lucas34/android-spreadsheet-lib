@@ -17,7 +17,7 @@ compile 'fr.nelaupe:spreadsheet:1.0.1@aar'
 ``` xml
 <dependency>
     <groupId>fr.nelaupe</groupId>
-    <artifactId>fr.nelaupe:spreadsheet</artifactId>
+    <artifactId>spreadsheet</artifactId>
     <version>1.0.1</version>
 </dependency>
 ```
