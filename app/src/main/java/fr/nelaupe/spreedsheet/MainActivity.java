@@ -13,6 +13,7 @@ import org.fluttercode.datafactory.impl.DataFactory;
 import fr.nelaupe.spreadsheetlib.OnItemClickListener;
 import fr.nelaupe.spreadsheetlib.SpreadSheetAdaptor;
 import fr.nelaupe.spreadsheetlib.SpreadSheetCell;
+import fr.nelaupe.spreadsheetlib.SpreadSheetData;
 import fr.nelaupe.spreadsheetlib.SpreadSheetView;
 
 public class MainActivity extends Activity {
@@ -27,14 +28,11 @@ public class MainActivity extends Activity {
         initSpreadSheet(spreadSheetView);
 //        initSpreadSheetWithAdaptor(spreadSheetView);
 
-        spreadSheetView.setOnItemClickListener(new OnItemClickListener<Data>() {
-            @Override
-            public void onItemClick(Data item) {
-                Integer id = item.column1;
-            }
-        });
-
         spreadSheetView.invalidate();
+    }
+
+    private class Test extends SpreadSheetData {
+
     }
 
     // Simple but not flexible. Create only text row.
@@ -49,6 +47,14 @@ public class MainActivity extends Activity {
         for (int i = 0; i < 30; i++) {
             cellAdaptor.add(generateDummyData(i));
         }
+
+        cellAdaptor.setOnItemClickListener(new OnItemClickListener<Data>() {
+            @Override
+            public void onItemClick(Data item) {
+
+            }
+        });
+
         spreadSheetView.setAdaptor(cellAdaptor);
     }
 

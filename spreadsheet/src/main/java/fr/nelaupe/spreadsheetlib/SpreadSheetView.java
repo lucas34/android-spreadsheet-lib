@@ -59,8 +59,6 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     private TableLayout mTable;
     private TableLayout mFixed;
     private TableLayout mFixedHeader;
-    private OnItemClickListener mItemClickListener;
-    private OnSortingListener mSortingListener;
 
     private int mHeaderBackgroundColor;
     private int mHeaderTextColor;
@@ -295,27 +293,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
 
         } else if (i == R.id.item) {
             Integer position = (Integer) v.getTag(R.id.item_number);
-            onItemClick(mAdaptor.get(position));
-        }
-    }
-
-    public void setOnItemClickListener(OnItemClickListener<? extends SpreadSheetData> listener) {
-        mItemClickListener = listener;
-    }
-
-    public void onItemClick(SpreadSheetData item) {
-        if (mItemClickListener != null) {
-            mItemClickListener.onItemClick(item);
-        }
-    }
-
-    public void setOnSortingListener(OnSortingListener mSortingListener) {
-        this.mSortingListener = mSortingListener;
-    }
-
-    public void onSort() {
-        if (mSortingListener != null) {
-            mSortingListener.onSort();
+            mAdaptor.onRowClick(position);
         }
     }
 
@@ -482,7 +460,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         } else {
             sort(v, comparator);
         }
-        onSort();
+        mAdaptor.onSort();
         invalidateContent();
     }
 
