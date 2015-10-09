@@ -74,7 +74,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     private int mTextPaddingLeft;
     private int mTextPaddingRight;
 
-    private SpreadSheetAdaptor mAdaptor;
+    private SpreadSheetAdaptor<SpreadSheetData> mAdaptor;
 
     private static final int mDefaultTextGravity = Gravity.LEFT|Gravity.CENTER_VERTICAL;
 
@@ -174,28 +174,24 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         invalidate();
     }
 
-    /*
-     *  Data
-     * Deprecated : Please use the adaptor instead
+    /**
+     * With auto adaptor
      */
-    @Deprecated
     public List<? extends SpreadSheetData> getData() {
         return mAdaptor.getData();
     }
 
     /**
-     * Deprecated : Please use the adaptor instead
+     * With auto adaptor
      */
-    @Deprecated
     public void add(SpreadSheetData data) {
         mAdaptor.add(data);
     }
 
     /**
-     * Deprecated : Please use the adaptor instead
+     * With auto adaptor
      */
-    @Deprecated
-    public void addAll(List<? extends SpreadSheetData> data) {
+    public void addAll(List<SpreadSheetData> data) {
         mAdaptor.addAll(data);
     }
 
@@ -298,12 +294,12 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
             }
 
         } else if (i == R.id.item) {
-            SpreadSheetData item = (SpreadSheetData) v.getTag(R.id.item_data);
-            onItemClick(item);
+            Integer position = (Integer) v.getTag(R.id.item_number);
+            onItemClick(mAdaptor.get(position));
         }
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener) {
+    public void setOnItemClickListener(OnItemClickListener<? extends SpreadSheetData> listener) {
         mItemClickListener = listener;
     }
 
@@ -411,7 +407,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
             row.setGravity(mTextGravity);
             row.setBackgroundColor(mContext.getResources().getColor(colorBool ? R.color.white : R.color.grey_cell));
             row.setId(R.id.item);
-            row.setTag(R.id.item_data, resource);
+            row.setTag(R.id.item_number, nb);
             row.setOnClickListener(this);
             row.setPadding(mTextPaddingLeft, 0, mTextPaddingRight, 0);
 
@@ -527,7 +523,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         mAdaptor = adaptor;
     }
 
-    private class SimpleTextAdaptor extends SpreadSheetAdaptor {
+    private class SimpleTextAdaptor extends SpreadSheetAdaptor<SpreadSheetData> {
 
         @Override
         public View getView(SpreadSheetCell cell, Object object) {

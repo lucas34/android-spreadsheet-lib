@@ -4,4 +4,5 @@
     <item name="item" type="id"/>
     <item name="filter" type="id"/>
     <item name="item_data" type="id"/>
+    <item name="item_number" type="id"/>
 </resources>

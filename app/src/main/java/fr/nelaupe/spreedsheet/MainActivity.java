@@ -10,9 +10,10 @@ import android.widget.TextView;
 
 import org.fluttercode.datafactory.impl.DataFactory;
 
+import fr.nelaupe.spreadsheetlib.OnItemClickListener;
+import fr.nelaupe.spreadsheetlib.SpreadSheetAdaptor;
 import fr.nelaupe.spreadsheetlib.SpreadSheetCell;
 import fr.nelaupe.spreadsheetlib.SpreadSheetView;
-import fr.nelaupe.spreadsheetlib.SpreadSheetAdaptor;
 
 public class MainActivity extends Activity {
 
@@ -23,14 +24,20 @@ public class MainActivity extends Activity {
 
         SpreadSheetView spreadSheetView = (SpreadSheetView) findViewById(R.id.spread_sheet);
 
-//        initSpreadSheet(spreadSheetView);
-        initSpreadSheetWithAdaptor(spreadSheetView);
+        initSpreadSheet(spreadSheetView);
+//        initSpreadSheetWithAdaptor(spreadSheetView);
+
+        spreadSheetView.setOnItemClickListener(new OnItemClickListener<Data>() {
+            @Override
+            public void onItemClick(Data item) {
+                Integer id = item.column1;
+            }
+        });
 
         spreadSheetView.invalidate();
     }
 
     // Simple but not flexible. Create only text row.
-    @Deprecated
     private void initSpreadSheet(SpreadSheetView spreadSheetView) {
         for (int i = 0; i < 30; i++) {
             spreadSheetView.add(generateDummyData(i));
@@ -62,7 +69,7 @@ public class MainActivity extends Activity {
     }
 
 
-    private class CustomCellAdaptor extends SpreadSheetAdaptor {
+    private class CustomCellAdaptor extends SpreadSheetAdaptor<Data> {
 
         @Override
         public View getView(SpreadSheetCell cell, Object object) {

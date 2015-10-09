@@ -13,24 +13,28 @@ import java.util.List;
  * Created by lucas
  * Date 26/03/15
  */
-public abstract class SpreadSheetAdaptor {
+public abstract class SpreadSheetAdaptor<TSelf> {
 
-    private List<SpreadSheetData> mData;
+    private List<TSelf> mData;
 
     public SpreadSheetAdaptor() {
         mData = new ArrayList<>();
     }
 
-    public void add(SpreadSheetData data) {
+    public void add(TSelf data) {
         mData.add(data);
     }
 
-    public void addAll(List<? extends SpreadSheetData> data) {
+    public void addAll(List<TSelf> data) {
         mData.addAll(data);
     }
 
-    public List<? extends SpreadSheetData> getData() {
+    public List<TSelf> getData() {
         return mData;
+    }
+
+    public TSelf get(int position) {
+        return mData.get(position);
     }
 
     public void clearData() {
