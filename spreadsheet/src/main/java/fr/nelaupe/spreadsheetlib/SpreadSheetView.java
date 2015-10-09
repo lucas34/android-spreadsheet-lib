@@ -74,7 +74,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     private float mTextSize;
     private float mMinFixedRowWidth;
 
-    private static final int mDefaultTextGravity = Gravity.LEFT;
+    private static final int mDefaultTextGravity = Gravity.LEFT|Gravity.CENTER_VERTICAL;
 
     public SpreadSheetView(Context context) {
         super(context);
