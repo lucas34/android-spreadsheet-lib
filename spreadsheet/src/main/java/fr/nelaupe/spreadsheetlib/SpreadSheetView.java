@@ -74,31 +74,33 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     private float mTextSize;
     private float mMinFixedRowWidth;
 
+    private static final int mDefaultTextGravity = Gravity.LEFT;
+
     public SpreadSheetView(Context context) {
         super(context);
-        wrapWrapTableRowParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
+        wrapWrapTableRowParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, mDefaultTextGravity);
         mContext = context;
         screenDensity = getContext().getResources().getDisplayMetrics().density;
-        mTextGravity = Gravity.CENTER;
+        mTextGravity = mDefaultTextGravity;
         init();
     }
 
     public SpreadSheetView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        wrapWrapTableRowParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
+        wrapWrapTableRowParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, mDefaultTextGravity);
         mContext = context;
         screenDensity = getContext().getResources().getDisplayMetrics().density;
-        mTextGravity = Gravity.CENTER;
+        mTextGravity = mDefaultTextGravity;
         parseAttribute(context, attrs);
         init();
     }
 
     public SpreadSheetView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        wrapWrapTableRowParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
+        wrapWrapTableRowParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, mDefaultTextGravity);
         mContext = context;
         screenDensity = getContext().getResources().getDisplayMetrics().density;
-        mTextGravity = Gravity.CENTER;
+        mTextGravity = mDefaultTextGravity;
         parseAttribute(context, attrs);
         init();
     }
@@ -106,10 +108,10 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public SpreadSheetView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        wrapWrapTableRowParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
+        wrapWrapTableRowParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, mDefaultTextGravity);
         mContext = context;
         screenDensity = getContext().getResources().getDisplayMetrics().density;
-        mTextGravity = Gravity.CENTER;
+        mTextGravity = mDefaultTextGravity;
         parseAttribute(context, attrs);
         init();
     }
@@ -355,7 +357,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
                 if(!TextUtils.isEmpty(spreadSheetCell.filterName())) {
                     button.setTag(R.id.filter_name, spreadSheetCell.filterName());
                 }
-                button.invalidate();
+//                button.invalidate();
                 row.addView(button);
             }
 

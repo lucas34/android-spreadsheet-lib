@@ -2,7 +2,6 @@ package fr.nelaupe.spreedsheet;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.Gravity;
 
 import org.fluttercode.datafactory.impl.DataFactory;
 
@@ -16,7 +15,6 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         SpreadSheetView spreadSheetView = (SpreadSheetView) findViewById(R.id.spread_sheet);
-        spreadSheetView.setTextGravity(Gravity.CENTER | Gravity.CENTER_VERTICAL);
 
         for (int i = 0; i < 30; i++) {
             DataFactory df = new DataFactory();
