@@ -43,15 +43,14 @@ public class DispatcherHorizontalScrollView extends HorizontalScrollView {
 
     public void setTarget(View h) {
         this.target = h;
+        target.setDrawingCacheEnabled(true);
+        setDrawingCacheEnabled(true);
     }
-
 
     @Override
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         if (target != null) {
-            target.setScrollContainer(true);
             target.scrollTo(l, t);
-            target.invalidate(l, t, oldl, oldt);
         }
         super.onScrollChanged(l, t, oldl, oldt);
     }
