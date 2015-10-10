@@ -285,7 +285,9 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
 
         } else if (i == R.id.item) {
             Integer position = (Integer) v.getTag(R.id.item_number);
-            mAdaptor.getItemClickListener().onItemClick(mAdaptor.get(position));
+            if( mAdaptor.getItemClickListener() != null) {
+                mAdaptor.getItemClickListener().onItemClick(mAdaptor.get(position));
+            }
         }
     }
 
