@@ -16,6 +16,7 @@ import fr.nelaupe.spreadsheetlib.view.ArrowButton;
  * Created by lucas
  * Date 26/03/15
  */
+@SuppressWarnings({"unused", "unchecked"})
 public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
 
     private List<TSelf> mData;

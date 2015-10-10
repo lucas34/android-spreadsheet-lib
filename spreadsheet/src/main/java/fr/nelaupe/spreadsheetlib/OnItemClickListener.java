@@ -21,6 +21,7 @@ package fr.nelaupe.spreadsheetlib;
  * Created by Lucas Nelaupe
  * Date 26/03/15
  */
+@SuppressWarnings("unused")
 public interface OnItemClickListener<TSelf extends SpreadSheetData> {
 
     void onItemClick(TSelf item);

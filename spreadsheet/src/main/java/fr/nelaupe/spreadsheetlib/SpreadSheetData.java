@@ -20,6 +20,7 @@ package fr.nelaupe.spreadsheetlib;
  * Created by Lucas Nelaupe
  * Date 26/03/15
  */
+@SuppressWarnings({"unused", "unchecked"})
 public abstract class SpreadSheetData {
 
     private Class<? extends SpreadSheetComparators> mComparators;

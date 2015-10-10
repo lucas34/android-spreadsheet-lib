@@ -12,6 +12,7 @@ import android.widget.TableRow;
  * Created by lucas
  * Date 26/03/15
  */
+@SuppressWarnings("unused")
 public class Configuration {
 
     private static final int mDefaultTextGravity = Gravity.LEFT | Gravity.CENTER_VERTICAL;
@@ -31,7 +32,7 @@ public class Configuration {
     private int mTextPaddingLeft;
     private int mTextPaddingRight;
 
-    private Context mContext;
+    private final Context mContext;
 
     public Configuration(Context context) {
         mContext = context;

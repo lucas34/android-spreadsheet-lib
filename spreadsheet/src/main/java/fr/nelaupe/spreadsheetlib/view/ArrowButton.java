@@ -85,7 +85,7 @@ public class ArrowButton extends Button {
 
             case UP:
                 return mergeDrawableStates(original, state_up);
-            case DONW:
+            case DOWN:
                 return mergeDrawableStates(original, state_down);
             case NONE:
                 return mergeDrawableStates(original, state_none);
@@ -148,7 +148,7 @@ public class ArrowButton extends Button {
 
     public enum states {
         UP,
-        DONW,
+        DOWN,
         NONE
     }
 

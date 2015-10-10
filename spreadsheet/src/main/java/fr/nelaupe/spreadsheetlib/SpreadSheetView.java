@@ -114,12 +114,6 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         a.recycle();
     }
 
-    @Override
-
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    }
-
     private void init() {
         mPreviousID = "";
         mInvert = false;
@@ -352,7 +346,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
 
     private void setArrowDown(ArrowButton view) {
         resetArrow();
-        view.setState(ArrowButton.states.DONW);
+        view.setState(ArrowButton.states.DOWN);
     }
 
     private void setArrowUP(ArrowButton view) {
