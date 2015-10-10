@@ -7,6 +7,8 @@ import android.content.Context;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import fr.nelaupe.spreadsheetlib.view.ArrowButton;
@@ -53,6 +55,27 @@ public class SimpleTextAdaptor extends SpreadSheetAdaptor<SpreadSheetData> {
         }
 
         return button;
+    }
+
+    @Override
+    public View getFixedHeaderView(String name) {
+        Button button = new Button(getContext());
+        button.setText(name);
+        button.setTextColor(getConfiguration().getHeaderTextColor());
+        button.setTextSize(TypedValue.COMPLEX_UNIT_PX, getConfiguration().getHeaderTextSize());
+        button.setGravity(getConfiguration().getTextGravity());
+        button.setWidth(getConfiguration().getMinFixedRowWidth());
+        button.setHeight(getConfiguration().getRowHeight());
+        button.setBackgroundResource(0);
+        return button;
+    }
+
+    @Override
+    public View getFixedCellView(String name, int position) {
+        CheckBox checkBox = new CheckBox(getContext());
+        checkBox.setWidth(getConfiguration().getMinFixedRowWidth());
+        checkBox.setHeight(getConfiguration().getRowHeight());
+        return checkBox;
     }
 
 }

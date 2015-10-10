@@ -18,9 +18,16 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
 
     private List<TSelf> mData;
     private Configuration mConfiguration;
+    private List<String> mFixedViewData;
 
     private OnItemClickListener<TSelf> mItemClickListener;
     private OnSortingListener mSortingListener;
+
+    public SpreadSheetAdaptor(Context context) {
+        mConfiguration = new Configuration(context);
+        mData = new ArrayList<>();
+        mFixedViewData = new ArrayList<>();
+    }
 
     public void add(TSelf data) {
         mData.add(data);
@@ -60,13 +67,12 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
         return mItemClickListener;
     }
 
-    public abstract View getCellView(SpreadSheetCell cell, Object object);
+    public List<String> getFixedViews() {
+        return mFixedViewData;
+    }
 
-    public abstract View getHeaderCellView(SpreadSheetCell cell);
-
-    public SpreadSheetAdaptor(Context context) {
-        mConfiguration = new Configuration(context);
-        mData = new ArrayList<>();
+    public void addFixed(String name) {
+        mFixedViewData.add(name);
     }
 
     public Configuration getConfiguration() {
@@ -80,5 +86,13 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
     public Context getContext() {
         return mConfiguration.getContext();
     }
+
+    public abstract View getCellView(SpreadSheetCell cell, Object object);
+
+    public abstract View getHeaderCellView(SpreadSheetCell cell);
+
+    public abstract View getFixedHeaderView(String name);
+
+    public abstract View getFixedCellView(String name, int position);
 
 }

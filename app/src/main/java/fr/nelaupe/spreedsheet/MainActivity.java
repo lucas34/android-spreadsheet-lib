@@ -37,13 +37,13 @@ public class MainActivity extends Activity {
     }
 
     private void initSpreadSheetWithAdaptor(SpreadSheetView spreadSheetView) {
-        CustomCellAdaptor cellAdaptor = new CustomCellAdaptor(getBaseContext());
+        CustomCellAdaptor cellAdaptor = new CustomCellAdaptor(this);
         for (int i = 0; i < 30; i++) {
             cellAdaptor.add(generateDummyData(i));
         }
-
         spreadSheetView.setAdaptor(cellAdaptor);
     }
+
 
     private Data generateDummyData(int i) {
         DataFactory df = new DataFactory();
@@ -92,7 +92,6 @@ public class MainActivity extends Activity {
                 return inflateTextView(object.toString());
             }
         }
-
     }
 
 }

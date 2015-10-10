@@ -21,10 +21,8 @@ import android.content.res.TypedArray;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -32,9 +30,7 @@ import android.widget.TableRow;
 import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import fr.nelaupe.spreadsheetlib.view.ArrowButton;
 import fr.nelaupe.spreadsheetlib.view.DispatcherHorizontalScrollView;
@@ -47,7 +43,6 @@ import fr.nelaupe.spreadsheetlib.view.DispatcherHorizontalScrollView;
 @SuppressWarnings({"unused", "unchecked"})
 public class SpreadSheetView extends LinearLayout implements View.OnClickListener {
 
-    private Map<String, Integer> mFixedViewData;
     private String mPreviousID;
     private boolean mInvert;
 
@@ -120,7 +115,6 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     }
 
     private void init() {
-        mFixedViewData = new HashMap<>();
         mPreviousID = "";
         mInvert = false;
 
@@ -162,10 +156,6 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
      */
     public void addAll(List<SpreadSheetData> data) {
         mAdaptor.addAll(data);
-    }
-
-    public void addFixedView(String name, int layout) {
-        mFixedViewData.put(name, layout);
     }
 
     /*
@@ -210,16 +200,12 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         row.setLayoutParams(mAdaptor.getConfiguration().getTableLayoutParams());
         row.setGravity(mAdaptor.getConfiguration().getTextGravity());
         row.setBackgroundColor(mAdaptor.getConfiguration().getHeaderColor());
-        for (String name : mFixedViewData.keySet()) {
-            Button textView = new Button(getContext());
-            textView.setText(name);
-            textView.setTextColor(mAdaptor.getConfiguration().getHeaderTextColor());
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mAdaptor.getConfiguration().getHeaderTextSize());
-            textView.setGravity(mAdaptor.getConfiguration().getTextGravity());
-            textView.setWidth(mAdaptor.getConfiguration().getMinFixedRowWidth());
-            textView.setHeight(mAdaptor.getConfiguration().getRowHeight());
-            textView.setBackgroundResource(0);
-            row.addView(textView);
+        for (String name : mAdaptor.getFixedViews()) {
+            View view = mAdaptor.getFixedHeaderView(name);
+            view.setMinimumWidth(mAdaptor.getConfiguration().getMinFixedRowWidth());
+            view.setMinimumHeight(mAdaptor.getConfiguration().getRowHeight());
+            view.setPadding(mAdaptor.getConfiguration().getTextPaddingLeft(), 0, mAdaptor.getConfiguration().getTextPaddingRight(), 0);
+            row.addView(view);
         }
 
         mFixedHeader.addView(row);
@@ -235,11 +221,13 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         for (Field field : cls.getClass().getDeclaredFields()) {
             if (field.isAnnotationPresent(SpreadSheetCell.class)) {
                 SpreadSheetCell spreadSheetCell = field.getAnnotation(SpreadSheetCell.class);
-
                 View button = mAdaptor.getHeaderCellView(spreadSheetCell);
                 button.setPadding(mAdaptor.getConfiguration().getTextPaddingLeft(), 0, mAdaptor.getConfiguration().getTextPaddingRight(), 0);
                 button.setOnClickListener(this);
                 button.setId(R.id.filter);
+                button.setMinimumWidth(mAdaptor.getConfiguration().computeSize(spreadSheetCell.size()));
+                button.setMinimumHeight(mAdaptor.getConfiguration().getHeaderRowHeight());
+                button.setPadding(mAdaptor.getConfiguration().getTextPaddingLeft(), 0, mAdaptor.getConfiguration().getTextPaddingRight(), 0);
                 if (!TextUtils.isEmpty(spreadSheetCell.filterName())) {
                     button.setTag(R.id.filter_name, spreadSheetCell.filterName());
                 }
@@ -250,16 +238,17 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         mHeader.addView(row);
     }
 
-    private void AddFixedRow(boolean colorBool) {
+    private void AddFixedRow(boolean colorBool, int position) {
         TableRow row = new TableRow(getContext());
         row.setLayoutParams(mAdaptor.getConfiguration().getTableLayoutParams());
         row.setGravity(mAdaptor.getConfiguration().getTextGravity());
         row.setBackgroundColor(getResources().getColor(colorBool ? R.color.white : R.color.grey_cell));
-        for (Map.Entry<String, Integer> entry : mFixedViewData.entrySet()) {
-            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(entry.getValue(), null);
-            view.setMinimumHeight(mAdaptor.getConfiguration().getRowHeight());
+
+        for (String name : mAdaptor.getFixedViews()) {
+            View view = mAdaptor.getFixedCellView(name, position);
             view.setMinimumWidth(mAdaptor.getConfiguration().getMinFixedRowWidth());
+            view.setMinimumHeight(mAdaptor.getConfiguration().getRowHeight());
+            view.setPadding(mAdaptor.getConfiguration().getTextPaddingLeft(), 0, mAdaptor.getConfiguration().getTextPaddingRight(), 0);
             row.addView(view);
         }
 
@@ -268,17 +257,17 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
 
     private void addRow() {
         Boolean colorBool = true;
-        int nb = 0;
+        int position = 0;
         for (SpreadSheetData resource : mAdaptor.getData()) {
 
-            AddFixedRow(colorBool);
+            AddFixedRow(colorBool, position);
 
             TableRow row = new TableRow(getContext());
             row.setLayoutParams(mAdaptor.getConfiguration().getTableLayoutParams());
             row.setGravity(mAdaptor.getConfiguration().getTextGravity());
             row.setBackgroundColor(getResources().getColor(colorBool ? R.color.white : R.color.grey_cell));
             row.setId(R.id.item);
-            row.setTag(R.id.item_number, nb);
+            row.setTag(R.id.item_number, position);
             row.setOnClickListener(this);
 
             for (Field field : resource.getClass().getDeclaredFields()) {
@@ -288,6 +277,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
                         Object object = field.get(resource);
                         View view = mAdaptor.getCellView(spreadSheetCell, object);
                         view.setMinimumWidth(mAdaptor.getConfiguration().computeSize(spreadSheetCell.size()));
+                        view.setMinimumHeight(mAdaptor.getConfiguration().getRowHeight());
                         view.setPadding(mAdaptor.getConfiguration().getTextPaddingLeft(), 0, mAdaptor.getConfiguration().getTextPaddingRight(), 0);
                         row.addView(view);
                     } catch (IllegalAccessException e) {
@@ -298,7 +288,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
 
             colorBool = !colorBool;
             mTable.addView(row);
-            nb++;
+            position++;
         }
     }
 
@@ -382,6 +372,10 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         }
 
         mAdaptor = adaptor;
+    }
+
+    public SpreadSheetAdaptor getAdaptor() {
+        return mAdaptor;
     }
 
 }
