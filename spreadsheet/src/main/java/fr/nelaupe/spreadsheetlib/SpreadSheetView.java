@@ -68,6 +68,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     private float mHeaderTextSize;
     private float mTextSize;
     private float mMinFixedRowWidth;
+    private float mHeaderRowHeight;
     private int mTextPaddingLeft;
     private int mTextPaddingRight;
     private SpreadSheetAdaptor<SpreadSheetData> mAdaptor;
@@ -132,6 +133,8 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
                 mHeaderTextColor = a.getColor(attr, 0);
             } else if (attr == R.styleable.sheet_rowHeight) {
                 mRowHeight = a.getDimensionPixelSize(attr, 0);
+            } else if (attr == R.styleable.sheet_headerRowHeight) {
+                mHeaderRowHeight = a.getDimensionPixelSize(attr, 0);
             } else if (attr == R.styleable.sheet_minFixedRowWidth) {
                 mMinFixedRowWidth = a.getDimensionPixelSize(attr, 0);
             } else if (attr == R.styleable.sheet_textPaddingRight) {
@@ -245,6 +248,14 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         mRowHeight = computeSize(rowHeight);
     }
 
+    public int getHeaderRowHeight() {
+        return (int) ((mHeaderRowHeight == 0) ? getResources().getDimension(R.dimen.rowHeight) : mHeaderRowHeight);
+    }
+
+    public void setHeaderRowHeight(float rowHeight) {
+        mHeaderRowHeight = computeSize(rowHeight);
+    }
+
     public int getMinFixedRowWidth() {
         return (int) ((mMinFixedRowWidth == 0) ? getResources().getDimension(R.dimen.minFixedRowWidth) : mMinFixedRowWidth);
     }
@@ -326,7 +337,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
                 SpreadSheetCell spreadSheetCell = field.getAnnotation(SpreadSheetCell.class);
                 ArrowButton button = new ArrowButton(mContext);
                 button.setWidth(computeSize(spreadSheetCell.size()));
-                button.setHeight(getRowHeight());
+                button.setHeight(getHeaderRowHeight());
                 button.setTextColor(getHeaderTextColor());
                 button.setBackgroundResource(0);
                 button.setText(spreadSheetCell.name());
@@ -381,7 +392,6 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
             row.setId(R.id.item);
             row.setTag(R.id.item_number, nb);
             row.setOnClickListener(this);
-            row.setPadding(mTextPaddingLeft, 0, mTextPaddingRight, 0);
 
             for (Field field : resource.getClass().getDeclaredFields()) {
                 if (field.isAnnotationPresent(SpreadSheetCell.class)) {
@@ -390,6 +400,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
                         Object object = field.get(resource);
                         View view = mAdaptor.getView(spreadSheetCell, object);
                         view.setMinimumWidth(computeSize(spreadSheetCell.size()));
+                        view.setPadding(mTextPaddingLeft, 0, mTextPaddingRight, 0);
                         row.addView(view);
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();

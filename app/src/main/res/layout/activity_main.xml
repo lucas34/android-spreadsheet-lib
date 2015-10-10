@@ -14,6 +14,7 @@
         sheet:headerColor="#009FFF"
         sheet:headerTextColor="#FFFFFF"
         sheet:headerTextSize="17sp"
+        sheet:headerRowHeight="50dp"
         sheet:minFixedRowWidth="80dp"
         sheet:rowHeight="50dp"
         sheet:textColor="@color/text"

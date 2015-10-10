@@ -79,7 +79,7 @@ public class MainActivity extends Activity {
         return view;
     }
 
-    private View inflateCheckbox(Boolean bool) {
+    private View inflateCheckbox(SpreadSheetCell cell, Boolean bool) {
         CheckBox checkBox = new CheckBox(MainActivity.this);
         checkBox.setChecked(bool);
         checkBox.setEnabled(false);
@@ -91,7 +91,7 @@ public class MainActivity extends Activity {
         @Override
         public View getView(SpreadSheetCell cell, Object object) {
             if (object.getClass().equals(Boolean.class)) {
-                return inflateCheckbox((Boolean) object);
+                return inflateCheckbox(cell, (Boolean) object);
             } else {
                 return inflateTextView(object.toString());
             }

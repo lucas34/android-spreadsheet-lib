@@ -31,7 +31,7 @@ public class Data extends SpreadSheetData {
     public String column6;
     @SpreadSheetCell(name = "Email", size = 300, filterName = "COMPARE_COLUMN7")
     public String column7;
-    @SpreadSheetCell(name = "Male?", size = 80, filterName = "")
+    @SpreadSheetCell(name = "M", size = 80, filterName = "")
     public boolean column8;
 
     public Data(Class<? extends SpreadSheetComparators> comparators) {
