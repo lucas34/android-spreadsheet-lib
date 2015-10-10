@@ -133,34 +133,29 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         scrollViewTab.setTarget(scrollViewHeader);
         scrollViewHeader.setTarget(scrollViewTab);
         scrollViewTab.setHorizontalScrollBarEnabled(true);
-
-        invalidate();
     }
 
-    /*
-     * With auto adaptor
-     */
+    @Deprecated
     public List<? extends SpreadSheetData> getData() {
         return mAdaptor.getData();
     }
 
-    /*
-     * With auto adaptor
-     */
+    @Deprecated
     public void add(SpreadSheetData data) {
         mAdaptor.add(data);
     }
 
-    /*
-     * With auto adaptor
-     */
+
+    @Deprecated
     public void addAll(List<SpreadSheetData> data) {
         mAdaptor.addAll(data);
     }
 
-    /*
-     *  Click
-     */
+    @Deprecated
+    public void clearData() {
+        mAdaptor.clearData();
+    }
+
     @Override
     public void onClick(View v) {
 
@@ -292,11 +287,6 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         }
     }
 
-    @Deprecated
-    public void clearData() {
-        mAdaptor.clearData();
-    }
-
     public void invalidate() {
         if (mAdaptor.getData().isEmpty()) return;
 
@@ -374,7 +364,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         mAdaptor = adaptor;
     }
 
-    public SpreadSheetAdaptor getAdaptor() {
+    public SpreadSheetAdaptor<SpreadSheetData> getAdaptor() {
         return mAdaptor;
     }
 

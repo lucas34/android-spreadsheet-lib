@@ -32,7 +32,7 @@ public class MainActivity extends Activity {
     // Simple but not flexible. Create only text row.
     private void initSpreadSheet(SpreadSheetView spreadSheetView) {
         for (int i = 0; i < 30; i++) {
-            spreadSheetView.add(generateDummyData(i));
+            spreadSheetView.getAdaptor().add(generateDummyData(i));
         }
     }
 
