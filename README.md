@@ -9,7 +9,7 @@ Automatic creation of two-dimensional scrollable array for Android
 **Gradle dependency**
 
 ``` groovy
-compile 'fr.nelaupe:spreadsheet:1.0.1@aar'
+compile 'fr.nelaupe:spreadsheet:1.0.2@aar'
 ```
 
 **Maven dependency**
@@ -18,7 +18,7 @@ compile 'fr.nelaupe:spreadsheet:1.0.1@aar'
 <dependency>
     <groupId>fr.nelaupe</groupId>
     <artifactId>spreadsheet</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
 </dependency>
 ```
 
