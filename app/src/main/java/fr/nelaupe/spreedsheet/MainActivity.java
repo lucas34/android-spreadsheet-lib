@@ -10,8 +10,7 @@ import android.widget.TextView;
 
 import org.fluttercode.datafactory.impl.DataFactory;
 
-import fr.nelaupe.spreadsheetlib.OnItemClickListener;
-import fr.nelaupe.spreadsheetlib.SpreadSheetAdaptor;
+import fr.nelaupe.spreadsheetlib.SimpleTextAdaptor;
 import fr.nelaupe.spreadsheetlib.SpreadSheetCell;
 import fr.nelaupe.spreadsheetlib.SpreadSheetView;
 
@@ -38,17 +37,10 @@ public class MainActivity extends Activity {
     }
 
     private void initSpreadSheetWithAdaptor(SpreadSheetView spreadSheetView) {
-        CustomCellAdaptor cellAdaptor = new CustomCellAdaptor();
+        CustomCellAdaptor cellAdaptor = new CustomCellAdaptor(getBaseContext());
         for (int i = 0; i < 30; i++) {
             cellAdaptor.add(generateDummyData(i));
         }
-
-        cellAdaptor.setOnItemClickListener(new OnItemClickListener<Data>() {
-            @Override
-            public void onItemClick(Data item) {
-
-            }
-        });
 
         spreadSheetView.setAdaptor(cellAdaptor);
     }
@@ -79,23 +71,28 @@ public class MainActivity extends Activity {
         return view;
     }
 
-    private View inflateCheckbox(SpreadSheetCell cell, Boolean bool) {
+    private View inflateCheckbox(Boolean bool) {
         CheckBox checkBox = new CheckBox(MainActivity.this);
         checkBox.setChecked(bool);
         checkBox.setEnabled(false);
         return checkBox;
     }
 
-    private class CustomCellAdaptor extends SpreadSheetAdaptor<Data> {
+    private class CustomCellAdaptor extends SimpleTextAdaptor {
+
+        public CustomCellAdaptor(Context context) {
+            super(context);
+        }
 
         @Override
-        public View getView(SpreadSheetCell cell, Object object) {
+        public View getCellView(SpreadSheetCell cell, Object object) {
             if (object.getClass().equals(Boolean.class)) {
-                return inflateCheckbox(cell, (Boolean) object);
+                return inflateCheckbox((Boolean) object);
             } else {
                 return inflateTextView(object.toString());
             }
         }
+
     }
 
 }

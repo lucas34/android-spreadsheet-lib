@@ -3,6 +3,7 @@
  */
 package fr.nelaupe.spreadsheetlib;
 
+import android.content.Context;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -16,13 +17,10 @@ import java.util.List;
 public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
 
     private List<TSelf> mData;
+    private Configuration mConfiguration;
 
     private OnItemClickListener<TSelf> mItemClickListener;
     private OnSortingListener mSortingListener;
-
-    public SpreadSheetAdaptor() {
-        mData = new ArrayList<>();
-    }
 
     public void add(TSelf data) {
         mData.add(data);
@@ -44,8 +42,6 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
         mData = new ArrayList<>();
     }
 
-    public abstract View getView(SpreadSheetCell cell, Object object);
-
     public void setOnSortingListener(OnSortingListener mSortingListener) {
         this.mSortingListener = mSortingListener;
     }
@@ -63,4 +59,26 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
     public OnItemClickListener<TSelf> getItemClickListener() {
         return mItemClickListener;
     }
+
+    public abstract View getCellView(SpreadSheetCell cell, Object object);
+
+    public abstract View getHeaderCellView(SpreadSheetCell cell);
+
+    public SpreadSheetAdaptor(Context context) {
+        mConfiguration = new Configuration(context);
+        mData = new ArrayList<>();
+    }
+
+    public Configuration getConfiguration() {
+        return mConfiguration;
+    }
+
+    public void setConfiguration(Configuration configuration) {
+        mConfiguration = configuration;
+    }
+
+    public Context getContext() {
+        return mConfiguration.getContext();
+    }
+
 }
