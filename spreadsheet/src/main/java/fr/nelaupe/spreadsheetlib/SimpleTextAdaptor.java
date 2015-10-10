@@ -37,7 +37,7 @@ public class SimpleTextAdaptor extends SpreadSheetAdaptor<SpreadSheetData> {
     }
 
     @Override
-    public View getHeaderCellView(SpreadSheetCell cell) {
+    public ArrowButton getHeaderCellView(SpreadSheetCell cell) {
         ArrowButton button = new ArrowButton(getContext());
         button.setWidth(getConfiguration().computeSize(cell.size()));
         button.setHeight(getConfiguration().getHeaderRowHeight());

@@ -9,6 +9,8 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.nelaupe.spreadsheetlib.view.ArrowButton;
+
 /**
  * Created with IntelliJ
  * Created by lucas
@@ -89,7 +91,7 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
 
     public abstract View getCellView(SpreadSheetCell cell, Object object);
 
-    public abstract View getHeaderCellView(SpreadSheetCell cell);
+    public abstract ArrowButton getHeaderCellView(SpreadSheetCell cell);
 
     public abstract View getFixedHeaderView(String name);
 

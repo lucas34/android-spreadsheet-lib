@@ -114,6 +114,12 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         a.recycle();
     }
 
+    @Override
+
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
+
     private void init() {
         mPreviousID = "";
         mInvert = false;
@@ -215,7 +221,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         for (Field field : cls.getClass().getDeclaredFields()) {
             if (field.isAnnotationPresent(SpreadSheetCell.class)) {
                 SpreadSheetCell spreadSheetCell = field.getAnnotation(SpreadSheetCell.class);
-                View button = mAdaptor.getHeaderCellView(spreadSheetCell);
+                ArrowButton button = mAdaptor.getHeaderCellView(spreadSheetCell);
                 button.setPadding(mAdaptor.getConfiguration().getTextPaddingLeft(), 0, mAdaptor.getConfiguration().getTextPaddingRight(), 0);
                 button.setOnClickListener(this);
                 button.setId(R.id.filter);
