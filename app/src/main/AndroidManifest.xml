@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="fr.nelaupe.spreedsheet"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest
+    package="fr.nelaupe.spreedsheet"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
         android:icon="@mipmap/ic_launcher"

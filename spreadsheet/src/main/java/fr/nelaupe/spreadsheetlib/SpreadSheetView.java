@@ -145,7 +145,6 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         mAdaptor.add(data);
     }
 
-
     @Deprecated
     public void addAll(List<SpreadSheetData> data) {
         mAdaptor.addAll(data);
@@ -181,7 +180,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
 
         } else if (i == R.id.item) {
             Integer position = (Integer) v.getTag(R.id.item_number);
-            if( mAdaptor.getItemClickListener() != null) {
+            if (mAdaptor.getItemClickListener() != null) {
                 mAdaptor.getItemClickListener().onItemClick(mAdaptor.get(position));
             }
         }
@@ -355,6 +354,10 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         view.setState(ArrowButton.states.UP);
     }
 
+    public SpreadSheetAdaptor<SpreadSheetData> getAdaptor() {
+        return mAdaptor;
+    }
+
     public void setAdaptor(SpreadSheetAdaptor adaptor) {
         if (mAdaptor != null && adaptor.getData().size() == 0) {
             adaptor.addAll(mAdaptor.getData());
@@ -362,10 +365,6 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         }
 
         mAdaptor = adaptor;
-    }
-
-    public SpreadSheetAdaptor<SpreadSheetData> getAdaptor() {
-        return mAdaptor;
     }
 
 }

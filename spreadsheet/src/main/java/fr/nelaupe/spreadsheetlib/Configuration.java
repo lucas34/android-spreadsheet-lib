@@ -124,12 +124,12 @@ public class Configuration {
         return mTextPaddingLeft;
     }
 
-    public int getTextPaddingRight() {
-        return mTextPaddingRight;
-    }
-
     public void setTextPaddingLeft(int textPaddingLeft) {
         this.mTextPaddingLeft = textPaddingLeft;
+    }
+
+    public int getTextPaddingRight() {
+        return mTextPaddingRight;
     }
 
     public void setTextPaddingRight(int textPaddingRight) {
