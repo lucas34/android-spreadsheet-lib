@@ -59,9 +59,8 @@ public class Data extends SpreadSheetData {
 
 ```
 
-``` xml
 Layout
-
+``` xml
 
 <fr.nelaupe.spreadsheetlib.SpreadSheetView
 	android:id="@+id/spread_sheet"
@@ -87,7 +86,7 @@ Activity
 SpreadSheetView spreadSheetView = (SpreadSheetView) findViewById(R.id.spread_sheet);
 for (int i = 0; i < 30; i++) {
 	Data data = new Data();
-	// Fill the datas
+	// Fill the data
 
 	spreadSheetView.getAdaptor().add(data);
 }
