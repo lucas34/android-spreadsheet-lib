@@ -20,6 +20,7 @@ public class MainActivity extends Activity {
 
         SpreadSheetView spreadSheetView = (SpreadSheetView) findViewById(R.id.spread_sheet);
         initSpreadSheet(spreadSheetView);
+        spreadSheetView.setArrow(0, true);
         spreadSheetView.invalidate();
     }
 

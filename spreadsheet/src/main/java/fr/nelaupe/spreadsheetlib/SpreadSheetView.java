@@ -41,8 +41,8 @@ import fr.nelaupe.spreadsheetlib.view.DispatcherHorizontalScrollView;
 @SuppressWarnings({"unused", "unchecked"})
 public class SpreadSheetView extends LinearLayout implements View.OnClickListener {
 
-    private int mPreviousID;
-    private boolean mInvert;
+    private int mColumnSortSelected;
+    private boolean mIsDESC;
 
     private TableLayout mHeader;
     private TableLayout mTable;
@@ -113,7 +113,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     }
 
     private void init() {
-        mInvert = false;
+        mIsDESC = false;
 
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View inflatedView = inflater.inflate(R.layout.spread_sheet_layout, this, true);
@@ -164,7 +164,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
 
             try {
                 if (annotationFields.getField().get(mAdaptor.getData().get(0)) instanceof Comparable) {
-                    doSorting(v, mAdaptor.sortBy(annotationFields.getField()));
+                    doSorting(columnPosition, mAdaptor.sortBy(annotationFields.getField()));
                 }
             } catch (IllegalAccessException e1) {
                 e1.printStackTrace();
@@ -298,9 +298,9 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
 
         addHeader();
         addRow();
+
+        putArrow(mColumnSortSelected, mIsDESC);
     }
-
-
 
     private void invalidateContent() {
         mTable.removeAllViews();
@@ -312,49 +312,47 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     /*
      *  Sorting
      */
-    private void invert(View v) {
+    private void invert(int columnId) {
         Collections.reverse(mAdaptor.getData());
-        if (!mInvert) {
-            setArrowDown((ArrowButton) v);
-        } else {
-            setArrowUP((ArrowButton) v);
-        }
-        mInvert = !mInvert;
+        mIsDESC = !mIsDESC;
     }
 
-    private void sort(View v, Comparator comparator) {
-        setArrowUP((ArrowButton) v);
-        mPreviousID = (int) v.getTag(R.id.filter_column_position);
-        mInvert = false;
+    private void sort(int columnId, Comparator comparator) {
+        mIsDESC = true;
         Collections.sort(mAdaptor.getData(), comparator);
     }
 
-    private void doSorting(View v, Comparator<? extends SpreadSheetData> comparator) {
-        if (mPreviousID == (int) v.getTag(R.id.filter_column_position)) {
-            invert(v);
+    private void doSorting(int columnId, Comparator<? extends SpreadSheetData> comparator) {
+        if (mColumnSortSelected == columnId) {
+            invert(columnId);
         } else {
-            sort(v, comparator);
+            sort(columnId, comparator);
         }
+        putArrow(columnId, mIsDESC);
         mAdaptor.onSort();
         invalidateContent();
     }
 
-    private void resetArrow() {
+    private void putArrow(int column, boolean isDESC) {
         TableRow row = (TableRow) (mHeader).getChildAt(0);
         for (int i = 0; i < row.getChildCount(); ++i) {
             ArrowButton childAt = (ArrowButton) row.getChildAt(i);
-            childAt.setState(ArrowButton.states.NONE);
+            if(column == (int) childAt.getTag(R.id.filter_column_position)) {
+                mColumnSortSelected = column;
+                if(isDESC) {
+                    childAt.setState(ArrowButton.states.UP);
+                } else {
+                    childAt.setState(ArrowButton.states.DOWN);
+                }
+            } else {
+                childAt.setState(ArrowButton.states.NONE);
+            }
         }
     }
 
-    private void setArrowDown(ArrowButton view) {
-        resetArrow();
-        view.setState(ArrowButton.states.DOWN);
-    }
-
-    private void setArrowUP(ArrowButton view) {
-        resetArrow();
-        view.setState(ArrowButton.states.UP);
+    public void setArrow(int column, boolean isDESC) {
+        mColumnSortSelected = column;
+        mIsDESC = isDESC;
     }
 
     public SpreadSheetAdaptor<SpreadSheetData> getAdaptor() {
