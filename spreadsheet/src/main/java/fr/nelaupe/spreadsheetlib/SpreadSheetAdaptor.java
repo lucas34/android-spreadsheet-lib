@@ -6,7 +6,10 @@ package fr.nelaupe.spreadsheetlib;
 import android.content.Context;
 import android.view.View;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import fr.nelaupe.spreadsheetlib.view.ArrowButton;
@@ -22,6 +25,7 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
     private List<TSelf> mData;
     private Configuration mConfiguration;
     private List<String> mFixedViewData;
+    private  ArrayList<AnnotationFields> mFields;
 
     private OnItemClickListener<TSelf> mItemClickListener;
     private OnSortingListener mSortingListener;
@@ -97,5 +101,31 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
     public abstract View getFixedHeaderView(String name);
 
     public abstract View getFixedCellView(String name, int position);
+
+    public void inspectFields() {
+        mFields  = new ArrayList<>();
+
+        if(getData().isEmpty()) { return; }
+
+        for (Field field : getData().get(0).getClass().getDeclaredFields()) {
+            if (field.isAnnotationPresent(SpreadSheetCell.class)) {
+                mFields.add(new AnnotationFields(field, field.getAnnotation(SpreadSheetCell.class)));
+            }
+        }
+
+        Collections.sort(mFields, new Comparator<AnnotationFields>() {
+            @Override
+            public int compare(AnnotationFields lhs, AnnotationFields rhs) {
+                Integer positionL = lhs.getAnnotation().position();
+                Integer positionR = rhs.getAnnotation().position();
+
+                return positionL.compareTo(positionR);
+            }
+        });
+    }
+
+    public List<AnnotationFields> getFields() {
+        return mFields;
+    }
 
 }

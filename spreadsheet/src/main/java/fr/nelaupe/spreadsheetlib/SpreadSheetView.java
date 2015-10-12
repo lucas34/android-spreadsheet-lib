@@ -27,7 +27,6 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
-import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -190,6 +189,8 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
      *  View
      */
     private void addFixedHeader() {
+        if(mAdaptor.getFixedViews().size() == 0) return;
+
         TableRow row = new TableRow(getContext());
         row.setLayoutParams(mAdaptor.getConfiguration().getTableLayoutParams());
         row.setGravity(mAdaptor.getConfiguration().getTextGravity());
@@ -212,27 +213,28 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         row.setGravity(mAdaptor.getConfiguration().getTextGravity());
         row.setBackgroundColor(mAdaptor.getConfiguration().getHeaderColor());
 
-        for (Field field : cls.getClass().getDeclaredFields()) {
-            if (field.isAnnotationPresent(SpreadSheetCell.class)) {
-                SpreadSheetCell spreadSheetCell = field.getAnnotation(SpreadSheetCell.class);
-                ArrowButton button = mAdaptor.getHeaderCellView(spreadSheetCell);
-                button.setPadding(mAdaptor.getConfiguration().getTextPaddingLeft(), 0, mAdaptor.getConfiguration().getTextPaddingRight(), 0);
-                button.setOnClickListener(this);
-                button.setId(R.id.filter);
-                button.setMinimumWidth(mAdaptor.getConfiguration().computeSize(spreadSheetCell.size()));
-                button.setMinimumHeight(mAdaptor.getConfiguration().getHeaderRowHeight());
-                button.setPadding(mAdaptor.getConfiguration().getTextPaddingLeft(), 0, mAdaptor.getConfiguration().getTextPaddingRight(), 0);
-                if (!TextUtils.isEmpty(spreadSheetCell.filterName())) {
-                    button.setTag(R.id.filter_name, spreadSheetCell.filterName());
-                }
-
-                row.addView(button);
+        for (AnnotationFields field : mAdaptor.getFields()) {
+            SpreadSheetCell spreadSheetCell = field.getAnnotation();
+            ArrowButton button = mAdaptor.getHeaderCellView(spreadSheetCell);
+            button.setPadding(mAdaptor.getConfiguration().getTextPaddingLeft(), 0, mAdaptor.getConfiguration().getTextPaddingRight(), 0);
+            button.setOnClickListener(this);
+            button.setId(R.id.filter);
+            button.setMinimumWidth(mAdaptor.getConfiguration().computeSize(spreadSheetCell.size()));
+            button.setMinimumHeight(mAdaptor.getConfiguration().getHeaderRowHeight());
+            button.setPadding(mAdaptor.getConfiguration().getTextPaddingLeft(), 0, mAdaptor.getConfiguration().getTextPaddingRight(), 0);
+            if (!TextUtils.isEmpty(spreadSheetCell.filterName())) {
+                button.setTag(R.id.filter_name, spreadSheetCell.filterName());
             }
+
+            row.addView(button);
         }
+
         mHeader.addView(row);
     }
 
     private void AddFixedRow(boolean colorBool, int position) {
+        if(mAdaptor.getFixedViews().size() == 0) return;
+
         TableRow row = new TableRow(getContext());
         row.setLayoutParams(mAdaptor.getConfiguration().getTableLayoutParams());
         row.setGravity(mAdaptor.getConfiguration().getTextGravity());
@@ -252,6 +254,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     private void addRow() {
         Boolean colorBool = true;
         int position = 0;
+
         for (SpreadSheetData resource : mAdaptor.getData()) {
 
             AddFixedRow(colorBool, position);
@@ -264,21 +267,20 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
             row.setTag(R.id.item_number, position);
             row.setOnClickListener(this);
 
-            for (Field field : resource.getClass().getDeclaredFields()) {
-                if (field.isAnnotationPresent(SpreadSheetCell.class)) {
-                    SpreadSheetCell spreadSheetCell = field.getAnnotation(SpreadSheetCell.class);
-                    try {
-                        Object object = field.get(resource);
-                        View view = mAdaptor.getCellView(spreadSheetCell, object);
-                        view.setMinimumWidth(mAdaptor.getConfiguration().computeSize(spreadSheetCell.size()));
-                        view.setMinimumHeight(mAdaptor.getConfiguration().getRowHeight());
-                        view.setPadding(mAdaptor.getConfiguration().getTextPaddingLeft(), 0, mAdaptor.getConfiguration().getTextPaddingRight(), 0);
-                        row.addView(view);
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
+            for (AnnotationFields field : mAdaptor.getFields()) {
+                SpreadSheetCell spreadSheetCell = field.getAnnotation();
+                try {
+                    Object object = field.getField().get(resource);
+                    View view = mAdaptor.getCellView(spreadSheetCell, object);
+                    view.setMinimumWidth(mAdaptor.getConfiguration().computeSize(spreadSheetCell.size()));
+                    view.setMinimumHeight(mAdaptor.getConfiguration().getRowHeight());
+                    view.setPadding(mAdaptor.getConfiguration().getTextPaddingLeft(), 0, mAdaptor.getConfiguration().getTextPaddingRight(), 0);
+                    row.addView(view);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
                 }
             }
+
 
             colorBool = !colorBool;
             mTable.addView(row);
@@ -286,8 +288,12 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         }
     }
 
+    @Override
     public void invalidate() {
+        super.invalidate();
         if (mAdaptor.getData().isEmpty()) return;
+
+        mAdaptor.inspectFields();
 
         mFixedHeader.removeAllViews();
         mHeader.removeAllViews();
@@ -295,9 +301,12 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         mTable.removeAllViews();
 
         addFixedHeader();
+
         addHeader();
         addRow();
     }
+
+
 
     private void invalidateContent() {
         mTable.removeAllViews();

@@ -16,9 +16,13 @@ import fr.nelaupe.spreadsheetlib.SpreadSheetView;
 
 public class MainActivity extends Activity {
 
+    private long start;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        start = System.currentTimeMillis();
+
         setContentView(R.layout.activity_main);
 
         SpreadSheetView spreadSheetView = (SpreadSheetView) findViewById(R.id.spread_sheet);
@@ -49,14 +53,14 @@ public class MainActivity extends Activity {
         DataFactory df = new DataFactory();
 
         Data data = new Data(Comparators.class);
-        data.column1 = i;
-        data.column2 = df.getFirstName();
-        data.column3 = df.getLastName();
-        data.column4 = df.getCity();
-        data.column5 = df.getBusinessName();
-        data.column6 = df.getBirthDate().toString();
-        data.column7 = df.getEmailAddress();
-        data.column8 = i % 3 == 0;
+        data.id = i;
+        data.first_name = df.getFirstName();
+        data.last_name = df.getLastName();
+        data.phone_number = df.getCity();
+        data.company = df.getBusinessName();
+        data.birthday = df.getBirthDate().toString();
+        data.email = df.getEmailAddress();
+        data.gender = i % 3 == 0;
 
         return data;
     }
@@ -94,4 +98,11 @@ public class MainActivity extends Activity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        long diff = System.currentTimeMillis() - start;
+        System.out.println("TIME TO LOAD : "+diff);
+    }
 }
