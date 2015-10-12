@@ -23,22 +23,4 @@ package fr.nelaupe.spreadsheetlib;
 @SuppressWarnings({"unused", "unchecked"})
 public abstract class SpreadSheetData {
 
-    private Class<? extends SpreadSheetComparators> mComparators;
-
-    public SpreadSheetData() {
-
-    }
-
-    public SpreadSheetData(Class<? extends SpreadSheetComparators> comparators) {
-        mComparators = comparators;
-    }
-
-    public Class<? extends SpreadSheetComparators> getComparatorsClass() {
-        return mComparators;
-    }
-
-    public boolean hasComparators() {
-        return mComparators != null;
-    }
-
 }

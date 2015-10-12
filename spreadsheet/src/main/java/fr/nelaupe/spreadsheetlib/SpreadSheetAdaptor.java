@@ -128,4 +128,24 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
         return mFields;
     }
 
+    public Comparator<TSelf> sortBy(final Field field) {
+
+        return new Comparator<TSelf>() {
+            @Override
+            public int compare(TSelf lhs, TSelf rhs) {
+
+                try {
+                    Comparable lComparable = (Comparable) field.get(lhs);
+                    Comparable rComparable = (Comparable) field.get(rhs);
+
+                    return lComparable.compareTo(rComparable);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                    return 0;
+                }
+            }
+        };
+    }
+
+
 }

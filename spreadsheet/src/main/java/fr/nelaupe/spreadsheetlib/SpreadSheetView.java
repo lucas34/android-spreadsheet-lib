@@ -19,7 +19,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,7 +41,7 @@ import fr.nelaupe.spreadsheetlib.view.DispatcherHorizontalScrollView;
 @SuppressWarnings({"unused", "unchecked"})
 public class SpreadSheetView extends LinearLayout implements View.OnClickListener {
 
-    private String mPreviousID;
+    private int mPreviousID;
     private boolean mInvert;
 
     private TableLayout mHeader;
@@ -114,7 +113,6 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     }
 
     private void init() {
-        mPreviousID = "";
         mInvert = false;
 
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -160,21 +158,16 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         int i = v.getId();
 
         if (i == R.id.filter) {
-            SpreadSheetData cls = mAdaptor.getData().get(0);
-            try {
-                String filterName = String.valueOf(v.getTag(R.id.filter_name));
-                if (!TextUtils.isEmpty(filterName)) {
-                    if (cls.hasComparators()) {
-                        Comparator<SpreadSheetData> comparator = (Comparator<SpreadSheetData>) cls.getComparatorsClass().getDeclaredField(filterName).get(cls);
-                        doSorting(v, comparator);
-                    } else {
-                        Comparator<SpreadSheetData> comparator = (Comparator<SpreadSheetData>) cls.getClass().getDeclaredField(filterName).get(cls);
-                        doSorting(v, comparator);
-                    }
-                }
 
-            } catch (Exception e) {
-                e.printStackTrace();
+            int columnPosition = (Integer) v.getTag(R.id.filter_column_position);
+            AnnotationFields annotationFields = mAdaptor.getFields().get(columnPosition);
+
+            try {
+                if (annotationFields.getField().get(mAdaptor.getData().get(0)) instanceof Comparable) {
+                    doSorting(v, mAdaptor.sortBy(annotationFields.getField()));
+                }
+            } catch (IllegalAccessException e1) {
+                e1.printStackTrace();
             }
 
         } else if (i == R.id.item) {
@@ -213,6 +206,8 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         row.setGravity(mAdaptor.getConfiguration().getTextGravity());
         row.setBackgroundColor(mAdaptor.getConfiguration().getHeaderColor());
 
+        int column = 0;
+
         for (AnnotationFields field : mAdaptor.getFields()) {
             SpreadSheetCell spreadSheetCell = field.getAnnotation();
             ArrowButton button = mAdaptor.getHeaderCellView(spreadSheetCell);
@@ -222,9 +217,8 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
             button.setMinimumWidth(mAdaptor.getConfiguration().computeSize(spreadSheetCell.size()));
             button.setMinimumHeight(mAdaptor.getConfiguration().getHeaderRowHeight());
             button.setPadding(mAdaptor.getConfiguration().getTextPaddingLeft(), 0, mAdaptor.getConfiguration().getTextPaddingRight(), 0);
-            if (!TextUtils.isEmpty(spreadSheetCell.filterName())) {
-                button.setTag(R.id.filter_name, spreadSheetCell.filterName());
-            }
+            button.setTag(R.id.filter_column_position, column);
+            column++;
 
             row.addView(button);
         }
@@ -328,15 +322,15 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         mInvert = !mInvert;
     }
 
-    private void sort(View v, Comparator<SpreadSheetData> comparator) {
+    private void sort(View v, Comparator comparator) {
         setArrowUP((ArrowButton) v);
-        mPreviousID = String.valueOf(v.getTag(R.id.filter_name));
+        mPreviousID = (int) v.getTag(R.id.filter_column_position);
         mInvert = false;
         Collections.sort(mAdaptor.getData(), comparator);
     }
 
-    private void doSorting(View v, Comparator<SpreadSheetData> comparator) {
-        if (mPreviousID.equals(v.getTag(R.id.filter_name))) {
+    private void doSorting(View v, Comparator<? extends SpreadSheetData> comparator) {
+        if (mPreviousID == (int) v.getTag(R.id.filter_column_position)) {
             invert(v);
         } else {
             sort(v, comparator);

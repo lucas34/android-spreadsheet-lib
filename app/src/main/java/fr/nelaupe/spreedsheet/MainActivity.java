@@ -52,7 +52,7 @@ public class MainActivity extends Activity {
     private Data generateDummyData(int i) {
         DataFactory df = new DataFactory();
 
-        Data data = new Data(Comparators.class);
+        Data data = new Data();
         data.id = i;
         data.first_name = df.getFirstName();
         data.last_name = df.getLastName();

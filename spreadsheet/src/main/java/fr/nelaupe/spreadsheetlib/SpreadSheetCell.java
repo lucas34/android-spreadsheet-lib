@@ -28,8 +28,6 @@ import java.lang.annotation.RetentionPolicy;
 public @interface SpreadSheetCell {
     String name();
 
-    String filterName();
-
     int size();
 
     int position();

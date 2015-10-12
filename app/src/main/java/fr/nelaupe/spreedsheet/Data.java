@@ -4,7 +4,6 @@
 package fr.nelaupe.spreedsheet;
 
 import fr.nelaupe.spreadsheetlib.SpreadSheetCell;
-import fr.nelaupe.spreadsheetlib.SpreadSheetComparators;
 import fr.nelaupe.spreadsheetlib.SpreadSheetData;
 
 /**
@@ -17,33 +16,29 @@ public class Data extends SpreadSheetData {
 
     // Put ONLY The DATA that you need to display !!
 
-    @SpreadSheetCell(name = "ID", size = 100, filterName = "COMPARE_COLUMN1", position = 1)
+    @SpreadSheetCell(name = "ID", size = 100, position = 1)
     public Integer id;
 
-    @SpreadSheetCell(name = "First Name", size = 300, filterName = "COMPARE_COLUMN2", position = 2)
+    @SpreadSheetCell(name = "First Name", size = 300, position = 2)
     public String first_name;
 
-    @SpreadSheetCell(name = "Last Name", size = 300, filterName = "COMPARE_COLUMN3", position = 3)
+    @SpreadSheetCell(name = "Last Name", size = 300, position = 3)
     public String last_name;
 
-    @SpreadSheetCell(name = "Number", size = 300, filterName = "COMPARE_COLUMN4", position = 4)
+    @SpreadSheetCell(name = "Number", size = 300, position = 4)
     public String phone_number;
 
-    @SpreadSheetCell(name = "Company", size = 300, filterName = "COMPARE_COLUMN5", position = 5)
+    @SpreadSheetCell(name = "Company", size = 300, position = 5)
     public String company;
 
-    @SpreadSheetCell(name = "Birth date", size = 300, filterName = "COMPARE_COLUMN6", position = 6)
+    @SpreadSheetCell(name = "Birth date", size = 300, position = 6)
     public String birthday;
 
-    @SpreadSheetCell(name = "Email", size = 300, filterName = "COMPARE_COLUMN7", position = 7)
+    @SpreadSheetCell(name = "Email", size = 300, position = 7)
     public String email;
 
-    @SpreadSheetCell(name = "M", size = 80, filterName = "", position = 8)
+    @SpreadSheetCell(name = "M", size = 80, position = 8)
     public boolean gender;
-
-    public Data(Class<? extends SpreadSheetComparators> comparators) {
-        super(comparators);
-    }
 
 
 }

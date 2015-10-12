@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="filter_name" type="id"/>
+    <item name="filter_column_position" type="id"/>
     <item name="item" type="id"/>
     <item name="filter" type="id"/>
     <item name="item_data" type="id"/>
