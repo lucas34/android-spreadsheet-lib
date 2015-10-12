@@ -31,4 +31,7 @@ public @interface SpreadSheetCell {
     String filterName();
 
     int size();
+
+    int position();
+
 }
