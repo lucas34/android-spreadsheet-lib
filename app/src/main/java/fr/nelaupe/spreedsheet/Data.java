@@ -29,7 +29,7 @@ public class Data extends SpreadSheetData {
     public String phone_number;
 
     @SpreadSheetCell(name = "Company", size = 300, position = 5)
-    public String company;
+    public CustomCompany company;
 
     @SpreadSheetCell(name = "Birth date", size = 300, position = 6)
     public String birthday;

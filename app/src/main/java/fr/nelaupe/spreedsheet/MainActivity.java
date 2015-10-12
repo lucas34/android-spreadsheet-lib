@@ -57,7 +57,7 @@ public class MainActivity extends Activity {
         data.first_name = df.getFirstName();
         data.last_name = df.getLastName();
         data.phone_number = df.getCity();
-        data.company = df.getBusinessName();
+        data.company = new CustomCompany(df.getBusinessName());
         data.birthday = df.getBirthDate().toString();
         data.email = df.getEmailAddress();
         data.gender = i % 3 == 0;
