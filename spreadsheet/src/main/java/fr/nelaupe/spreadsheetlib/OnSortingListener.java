@@ -24,6 +24,6 @@ package fr.nelaupe.spreadsheetlib;
 @SuppressWarnings("unused")
 public interface OnSortingListener {
 
-    void onSort();
+    void onSort(AnnotationFields annotationFields);
 
 }

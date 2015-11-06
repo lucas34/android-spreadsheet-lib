@@ -49,17 +49,21 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     private TableLayout mFixed;
     private TableLayout mFixedHeader;
 
+    private boolean autoSorting;
+
     private SpreadSheetAdaptor<SpreadSheetData> mAdaptor;
 
     public SpreadSheetView(Context context) {
         super(context);
         mAdaptor = new SimpleTextAdaptor(getContext());
+        autoSorting = true;
         init();
     }
 
     public SpreadSheetView(Context context, AttributeSet attrs) {
         super(context, attrs);
         mAdaptor = new SimpleTextAdaptor(getContext());
+        autoSorting = true;
         parseAttribute(context, attrs);
         init();
     }
@@ -68,6 +72,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     public SpreadSheetView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mAdaptor = new SimpleTextAdaptor(getContext());
+        autoSorting = true;
         parseAttribute(context, attrs);
         init();
     }
@@ -76,6 +81,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     public SpreadSheetView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         mAdaptor = new SimpleTextAdaptor(getContext());
+        autoSorting = true;
         parseAttribute(context, attrs);
         init();
     }
@@ -162,12 +168,19 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
             int columnPosition = (Integer) v.getTag(R.id.filter_column_position);
             AnnotationFields annotationFields = mAdaptor.getFields().get(columnPosition);
 
-            try {
-                if (annotationFields.getField().get(mAdaptor.getData().get(0)) instanceof Comparable) {
-                    doSorting(columnPosition, mAdaptor.sortBy(annotationFields.getField()));
+
+            if (autoSorting) {
+
+                try {
+                    if (annotationFields.getField().get(mAdaptor.getData().get(0)) instanceof Comparable) {
+                        doSorting(columnPosition, mAdaptor.sortBy(annotationFields.getField()), annotationFields);
+                    }
+                } catch (IllegalAccessException e1) {
+                    e1.printStackTrace();
                 }
-            } catch (IllegalAccessException e1) {
-                e1.printStackTrace();
+
+            } else {
+                mAdaptor.onSort(annotationFields);
             }
 
         } else if (i == R.id.item) {
@@ -322,14 +335,14 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         Collections.sort(mAdaptor.getData(), comparator);
     }
 
-    private void doSorting(int columnId, Comparator<? extends SpreadSheetData> comparator) {
+    private void doSorting(int columnId, Comparator<? extends SpreadSheetData> comparator, AnnotationFields annotationFields) {
         if (mColumnSortSelected == columnId) {
             invert(columnId);
         } else {
             sort(columnId, comparator);
         }
         putArrow(columnId, mIsDESC);
-        mAdaptor.onSort();
+        mAdaptor.onSort(annotationFields);
         invalidateContent();
     }
 

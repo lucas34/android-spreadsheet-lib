@@ -60,9 +60,9 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
         this.mSortingListener = mSortingListener;
     }
 
-    public void onSort() {
+    public void onSort(AnnotationFields annotationFields) {
         if (mSortingListener != null) {
-            mSortingListener.onSort();
+            mSortingListener.onSort(annotationFields);
         }
     }
 
