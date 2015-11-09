@@ -25,7 +25,7 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
     private List<TSelf> mData;
     private Configuration mConfiguration;
     private List<String> mFixedViewData;
-    private  ArrayList<AnnotationFields> mFields;
+    private ArrayList<AnnotationFields> mFields;
 
     private OnItemClickListener<TSelf> mItemClickListener;
     private OnSortingListener mSortingListener;
@@ -60,9 +60,9 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
         this.mSortingListener = mSortingListener;
     }
 
-    public void onSort(AnnotationFields annotationFields) {
+    public void onSort(AnnotationFields annotationFields, boolean isDESC) {
         if (mSortingListener != null) {
-            mSortingListener.onSort(annotationFields);
+            mSortingListener.onSort(annotationFields, isDESC);
         }
     }
 

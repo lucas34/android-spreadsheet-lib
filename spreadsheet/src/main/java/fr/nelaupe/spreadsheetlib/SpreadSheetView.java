@@ -342,7 +342,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
             sort(columnId, comparator);
         }
         putArrow(columnId, mIsDESC);
-        mAdaptor.onSort(annotationFields);
+        mAdaptor.onSort(annotationFields, mIsDESC);
         invalidateContent();
     }
 
