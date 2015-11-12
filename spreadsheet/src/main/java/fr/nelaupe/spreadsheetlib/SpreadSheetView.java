@@ -300,8 +300,6 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         super.invalidate();
         if (mAdaptor.getData().isEmpty()) return;
 
-        mAdaptor.inspectFields();
-
         mFixedHeader.removeAllViews();
         mHeader.removeAllViews();
         mFixed.removeAllViews();
