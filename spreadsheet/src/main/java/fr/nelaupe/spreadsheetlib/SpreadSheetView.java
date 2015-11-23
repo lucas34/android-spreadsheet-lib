@@ -213,7 +213,6 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     }
 
     private void addHeader() {
-        SpreadSheetData cls = mAdaptor.getData().get(0);
         TableRow row = new TableRow(getContext());
         row.setLayoutParams(mAdaptor.getConfiguration().getTableLayoutParams());
         row.setGravity(mAdaptor.getConfiguration().getTextGravity());
@@ -298,7 +297,8 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     @Override
     public void invalidate() {
         super.invalidate();
-        if (mAdaptor.getData().isEmpty()) return;
+
+        if (mAdaptor.getFields().isEmpty()) return;
 
         mFixedHeader.removeAllViews();
         mHeader.removeAllViews();
