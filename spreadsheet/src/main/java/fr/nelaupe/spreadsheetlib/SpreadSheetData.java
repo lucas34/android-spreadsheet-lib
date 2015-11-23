@@ -15,6 +15,9 @@
  */
 package fr.nelaupe.spreadsheetlib;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+
 /**
  * Created with IntelliJ
  * Created by Lucas Nelaupe
@@ -22,5 +25,18 @@ package fr.nelaupe.spreadsheetlib;
  */
 @SuppressWarnings({"unused", "unchecked"})
 public abstract class SpreadSheetData {
+
+    protected ArrayList<AnnotationFields> defineField() {
+        ArrayList<AnnotationFields> fields = new ArrayList<>();
+
+        for (Field field : this.getClass().getDeclaredFields()) {
+            if (field.isAnnotationPresent(SpreadSheetCell.class)) {
+                fields.add(new AnnotationFields(field, field.getAnnotation(SpreadSheetCell.class)));
+            }
+        }
+
+        return fields;
+
+    }
 
 }

@@ -8,6 +8,7 @@ import android.view.View;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -25,7 +26,8 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
     private List<TSelf> mData;
     private Configuration mConfiguration;
     private List<String> mFixedViewData;
-    private ArrayList<AnnotationFields> mFields;
+    private List<AnnotationFields> mFields;
+    private List<Integer> mDisplayOnly;
 
     private OnItemClickListener<TSelf> mItemClickListener;
     private OnSortingListener mSortingListener;
@@ -35,6 +37,17 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
         mData = new ArrayList<>();
         mFixedViewData = new ArrayList<>();
         mFields  = new ArrayList<>();
+        mDisplayOnly = new ArrayList<>();
+    }
+
+    public void displayColumn(ArrayList<Integer> columnNumber) {
+        mDisplayOnly.clear();
+        mDisplayOnly.addAll(columnNumber);
+    }
+
+    public void displayColumn(Integer... columnNumber) {
+        mDisplayOnly.clear();
+        mDisplayOnly.addAll(Arrays.asList(columnNumber));
     }
 
     public void add(TSelf data) {
@@ -107,11 +120,8 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
 
         if(getData().isEmpty()) { return; }
 
-        for (Field field : getData().get(0).getClass().getDeclaredFields()) {
-            if (field.isAnnotationPresent(SpreadSheetCell.class)) {
-                mFields.add(new AnnotationFields(field, field.getAnnotation(SpreadSheetCell.class)));
-            }
-        }
+        mFields.clear();
+        mFields.addAll(get(0).defineField());
 
         Collections.sort(mFields, new Comparator<AnnotationFields>() {
             @Override
@@ -128,7 +138,20 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
         if (mFields.isEmpty()) {
             inspectFields();
         }
-        return mFields;
+
+        if(mDisplayOnly.isEmpty()) {
+            return mFields;
+        } else {
+            List<AnnotationFields> returned = new ArrayList<>();
+            for (AnnotationFields field : mFields) {
+                if (mDisplayOnly.contains(field.getAnnotation().position())) {
+                    returned.add(field);
+                }
+            }
+
+            return returned;
+        }
+
     }
 
     public Comparator<TSelf> sortBy(final Field field) {
