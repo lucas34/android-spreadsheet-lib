@@ -11,7 +11,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import fr.nelaupe.spreadsheetlib.view.ArrowButton;
 
@@ -25,7 +27,7 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
 
     private List<TSelf> mData;
     private Configuration mConfiguration;
-    private List<String> mFixedViewData;
+    private Set<String> mFixedViewData;
     private List<AnnotationFields> mFields;
     private List<Integer> mDisplayOnly;
 
@@ -35,7 +37,7 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
     public SpreadSheetAdaptor(Context context) {
         mConfiguration = new Configuration(context);
         mData = new ArrayList<>();
-        mFixedViewData = new ArrayList<>();
+        mFixedViewData = new HashSet<>();
         mFields  = new ArrayList<>();
         mDisplayOnly = new ArrayList<>();
     }
@@ -88,7 +90,7 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
         return mItemClickListener;
     }
 
-    public List<String> getFixedViews() {
+    public Set<String> getFixedViews() {
         return mFixedViewData;
     }
 
