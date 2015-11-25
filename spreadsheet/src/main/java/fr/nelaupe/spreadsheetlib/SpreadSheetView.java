@@ -204,7 +204,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         for (String name : mAdaptor.getFixedViews()) {
             View view = mAdaptor.getFixedHeaderView(name);
             view.setMinimumWidth(mAdaptor.getConfiguration().getMinFixedRowWidth());
-            view.setMinimumHeight(mAdaptor.getConfiguration().getRowHeight());
+            view.setMinimumHeight(mAdaptor.getConfiguration().getHeaderRowHeight());
             view.setPadding(mAdaptor.getConfiguration().getTextPaddingLeft(), 0, mAdaptor.getConfiguration().getTextPaddingRight(), 0);
             row.addView(view);
         }
