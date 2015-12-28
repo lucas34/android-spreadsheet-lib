@@ -128,8 +128,8 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
         Collections.sort(mFields, new Comparator<AnnotationFields>() {
             @Override
             public int compare(AnnotationFields lhs, AnnotationFields rhs) {
-                Integer positionL = lhs.getAnnotation().position();
-                Integer positionR = rhs.getAnnotation().position();
+                Integer positionL = lhs.getAnnotation().getPosition();
+                Integer positionR = rhs.getAnnotation().getPosition();
 
                 return positionL.compareTo(positionR);
             }
@@ -146,7 +146,7 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
         } else {
             List<AnnotationFields> returned = new ArrayList<>();
             for (AnnotationFields field : mFields) {
-                if (mDisplayOnly.contains(field.getAnnotation().position())) {
+                if (mDisplayOnly.contains(field.getAnnotation().getPosition())) {
                     returned.add(field);
                 }
             }
