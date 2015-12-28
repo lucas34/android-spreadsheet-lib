@@ -31,7 +31,7 @@ public abstract class SpreadSheetData {
 
         for (Field field : this.getClass().getDeclaredFields()) {
             if (field.isAnnotationPresent(SpreadSheetCell.class)) {
-                fields.add(new AnnotationFields(field, field.getAnnotation(SpreadSheetCell.class)));
+                fields.add(new AnnotationFields(field, new CellInformation(field.getAnnotation(SpreadSheetCell.class))));
             }
         }
 

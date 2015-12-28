@@ -13,18 +13,26 @@ import java.lang.reflect.Field;
 public class AnnotationFields {
 
     private Field mField;
-    private SpreadSheetCell mAnnotation;
+    private CellInformation mAnnotation;
 
-    public AnnotationFields(Field mField, SpreadSheetCell mAnnotation) {
+    public AnnotationFields(Field mField, CellInformation mAnnotation) {
         this.mField = mField;
         this.mAnnotation = mAnnotation;
     }
 
-    public SpreadSheetCell getAnnotation() {
-        return mAnnotation;
-    }
+//    public String getAnnotationName() {
+//        return mAnnotation.get();
+//    }
 
     public Field getField() {
         return mField;
+    }
+
+    public String getFieldName() {
+        return mField.getName();
+    }
+
+    public CellInformation getAnnotation() {
+        return mAnnotation;
     }
 }

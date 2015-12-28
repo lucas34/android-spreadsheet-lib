@@ -221,12 +221,12 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         int column = 0;
 
         for (AnnotationFields field : mAdaptor.getFields()) {
-            SpreadSheetCell spreadSheetCell = field.getAnnotation();
+            CellInformation spreadSheetCell = field.getAnnotation();
             ArrowButton button = mAdaptor.getHeaderCellView(spreadSheetCell);
             button.setPadding(mAdaptor.getConfiguration().getTextPaddingLeft(), 0, mAdaptor.getConfiguration().getTextPaddingRight(), 0);
             button.setOnClickListener(this);
             button.setId(R.id.filter);
-            button.setMinimumWidth(mAdaptor.getConfiguration().computeSize(spreadSheetCell.size()));
+            button.setMinimumWidth(mAdaptor.getConfiguration().computeSize(spreadSheetCell.getSize()));
             button.setMinimumHeight(mAdaptor.getConfiguration().getHeaderRowHeight());
             button.setPadding(mAdaptor.getConfiguration().getTextPaddingLeft(), 0, mAdaptor.getConfiguration().getTextPaddingRight(), 0);
             button.setTag(R.id.filter_column_position, column);
@@ -274,11 +274,11 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
             row.setOnClickListener(this);
 
             for (AnnotationFields field : mAdaptor.getFields()) {
-                SpreadSheetCell spreadSheetCell = field.getAnnotation();
+                CellInformation spreadSheetCell = field.getAnnotation();
                 try {
                     Object object = field.getField().get(resource);
                     View view = mAdaptor.getCellView(spreadSheetCell, object);
-                    view.setMinimumWidth(mAdaptor.getConfiguration().computeSize(spreadSheetCell.size()));
+                    view.setMinimumWidth(mAdaptor.getConfiguration().computeSize(spreadSheetCell.getSize()));
                     view.setMinimumHeight(mAdaptor.getConfiguration().getRowHeight());
                     view.setPadding(mAdaptor.getConfiguration().getTextPaddingLeft(), 0, mAdaptor.getConfiguration().getTextPaddingRight(), 0);
                     row.addView(view);

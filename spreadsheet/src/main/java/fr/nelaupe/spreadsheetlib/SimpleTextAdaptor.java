@@ -25,25 +25,25 @@ public class SimpleTextAdaptor extends SpreadSheetAdaptor<SpreadSheetData> {
     }
 
     @Override
-    public View getCellView(SpreadSheetCell cell, Object object) {
+    public View getCellView(CellInformation cell, Object object) {
         TextView recyclableTextView = new TextView(getContext());
         recyclableTextView.setText((object == null ? "" : object.toString()));
         recyclableTextView.setTextColor(getConfiguration().getTextColor());
         recyclableTextView.setGravity(getConfiguration().getTextGravity());
         recyclableTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getConfiguration().getTextSize());
-        recyclableTextView.setWidth(getConfiguration().computeSize(cell.size()));
+        recyclableTextView.setWidth(getConfiguration().computeSize(cell.getSize()));
         recyclableTextView.setHeight(getConfiguration().getRowHeight());
         return recyclableTextView;
     }
 
     @Override
-    public ArrowButton getHeaderCellView(SpreadSheetCell cell) {
+    public ArrowButton getHeaderCellView(CellInformation cell) {
         ArrowButton button = new ArrowButton(getContext());
-        button.setWidth(getConfiguration().computeSize(cell.size()));
+        button.setWidth(getConfiguration().computeSize(cell.getSize()));
         button.setHeight(getConfiguration().getHeaderRowHeight());
         button.setTextColor(getConfiguration().getHeaderTextColor());
         button.setBackgroundResource(0);
-        button.setText(cell.name());
+        button.setText(cell.getName());
         button.setTextSize(TypedValue.COMPLEX_UNIT_PX, getConfiguration().getHeaderTextSize());
         button.setTextGravity(getConfiguration().getTextGravity());
         if (((getConfiguration().getTextGravity() & Gravity.LEFT) == Gravity.LEFT) || ((getConfiguration().getTextGravity() & Gravity.START) == Gravity.START)) {

@@ -110,9 +110,9 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
         return mConfiguration.getContext();
     }
 
-    public abstract View getCellView(SpreadSheetCell cell, Object object);
+    public abstract View getCellView(CellInformation cell, Object object);
 
-    public abstract ArrowButton getHeaderCellView(SpreadSheetCell cell);
+    public abstract ArrowButton getHeaderCellView(CellInformation cell);
 
     public abstract View getFixedHeaderView(String name);
 
