@@ -17,6 +17,7 @@ package fr.nelaupe.spreadsheetlib;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created with IntelliJ
@@ -26,8 +27,8 @@ import java.util.ArrayList;
 @SuppressWarnings({"unused", "unchecked"})
 public abstract class SpreadSheetData {
 
-    protected ArrayList<AnnotationFields> defineField() {
-        ArrayList<AnnotationFields> fields = new ArrayList<>();
+    protected List<AnnotationFields> defineField() {
+        List<AnnotationFields> fields = new ArrayList<>();
 
         for (Field field : this.getClass().getDeclaredFields()) {
             if (field.isAnnotationPresent(SpreadSheetCell.class)) {
