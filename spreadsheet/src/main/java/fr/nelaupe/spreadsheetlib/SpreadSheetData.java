@@ -31,6 +31,7 @@ public abstract class SpreadSheetData {
         List<AnnotationFields> fields = new ArrayList<>();
 
         for (Field field : this.getClass().getDeclaredFields()) {
+            field.setAccessible(true);
             if (field.isAnnotationPresent(SpreadSheetCell.class)) {
                 fields.add(new AnnotationFields(field, new CellInformation(field.getAnnotation(SpreadSheetCell.class))));
             }
