@@ -4,7 +4,7 @@ apply plugin: 'maven'
 apply plugin: 'maven-publish'
 
 group 'fr.nelaupe'
-version '1.0.6'
+version '1.0.7'
 
 android {
     compileSdkVersion 23
@@ -13,8 +13,8 @@ android {
     defaultConfig {
         minSdkVersion 4
         targetSdkVersion 23
-        versionCode 7
-        versionName "1.0.6"
+        versionCode 8
+        versionName "1.0.7"
     }
     buildTypes {
         release {
