@@ -15,7 +15,7 @@ import android.widget.TableRow;
 @SuppressWarnings("unused")
 public class Configuration {
 
-    private static final int mDefaultTextGravity = Gravity.LEFT | Gravity.CENTER_VERTICAL;
+    private static final int mDefaultTextGravity = Gravity.LEFT | Gravity.START | Gravity.CENTER_VERTICAL;
     private final float screenDensity;
 
     private final TableRow.LayoutParams wrapWrapTableRowParams;
