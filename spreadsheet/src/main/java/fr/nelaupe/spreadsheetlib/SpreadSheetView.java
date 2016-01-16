@@ -179,7 +179,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
 
             } else {
                 mIsDESC = mColumnSortSelected != columnPosition || !mIsDESC;
-                putArrow(columnPosition, mIsDESC);
+                putArrow(columnPosition);
                 mAdaptor.onSort(annotationFields, mIsDESC);
             }
 
@@ -310,7 +310,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         addHeader();
         addRow();
 
-        putArrow(mColumnSortSelected, mIsDESC);
+        putArrow(mColumnSortSelected);
     }
 
     private void invalidateContent() {
@@ -334,21 +334,23 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     private void doSorting(int columnId, Comparator<? extends SpreadSheetData> comparator, AnnotationFields annotationFields) {
         if (mColumnSortSelected == columnId) {
             invert(columnId);
+            mIsDESC = !mIsDESC;
         } else {
             sort(columnId, comparator);
+            mIsDESC = false;
         }
-        putArrow(columnId, mIsDESC);
+        putArrow(columnId);
         mAdaptor.onSort(annotationFields, mIsDESC);
         invalidateContent();
     }
 
-    private void putArrow(int column, boolean isDESC) {
+    private void putArrow(int column) {
         TableRow row = (TableRow) (mHeader).getChildAt(0);
         for (int i = 0; i < row.getChildCount(); ++i) {
             ArrowButton childAt = (ArrowButton) row.getChildAt(i);
             if(column == (int) childAt.getTag(R.id.filter_column_position)) {
                 mColumnSortSelected = column;
-                if(isDESC) {
+                if(mIsDESC) {
                     childAt.setState(ArrowButton.states.UP);
                 } else {
                     childAt.setState(ArrowButton.states.DOWN);
