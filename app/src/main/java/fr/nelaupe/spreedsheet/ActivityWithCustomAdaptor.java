@@ -9,8 +9,8 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import fr.nelaupe.spreadsheetlib.CellInformation;
 import fr.nelaupe.spreadsheetlib.SimpleTextAdaptor;
-import fr.nelaupe.spreadsheetlib.SpreadSheetCell;
 import fr.nelaupe.spreadsheetlib.SpreadSheetView;
 
 /**
@@ -53,7 +53,7 @@ public class ActivityWithCustomAdaptor extends MainActivity {
         }
 
         @Override
-        public View getCellView(SpreadSheetCell cell, Object object) {
+        public View getCellView(CellInformation cell, Object object) {
             if (object.getClass().equals(Boolean.class)) {
                 return inflateCheckbox((Boolean) object);
             } else {
