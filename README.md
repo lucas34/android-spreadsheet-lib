@@ -9,7 +9,7 @@ Automatic creation of two-dimensional scrollable array for Android
 **Gradle dependency**
 
 ``` groovy
-compile 'fr.nelaupe:spreadsheet:1.0.6@aar'
+compile 'fr.nelaupe:spreadsheet:1.0.7@aar'
 ```
 
 **Maven dependency**
@@ -18,7 +18,7 @@ compile 'fr.nelaupe:spreadsheet:1.0.6@aar'
 <dependency>
     <groupId>fr.nelaupe</groupId>
     <artifactId>spreadsheet</artifactId>
-    <version>1.0.6</version>
+    <version>1.0.7</version>
 </dependency>
 ```
 
@@ -29,31 +29,31 @@ compile 'fr.nelaupe:spreadsheet:1.0.6@aar'
 Define the datas
 
 ``` java
-public class Data extends SpreadSheetData {
+public class Person extends SpreadSheetData {
 	
-	@SpreadSheetCell(name = "ID", size = 100, position = 1)
-    public Integer id;
+    @SpreadSheetCell(name = "ID", size = 100, position = 1)
+    private Integer id;
 
     @SpreadSheetCell(name = "First Name", size = 300, position = 2)
-    public String first_name;
+    private String firstName;
 
     @SpreadSheetCell(name = "Last Name", size = 300, position = 3)
-    public String last_name;
+    private String lastName;
 
-    @SpreadSheetCell(name = "Number", size = 300, position = 4)
-    public String phone_number;
+    @SpreadSheetCell(name = "city", size = 300, position = 4)
+    private String city;
 
     @SpreadSheetCell(name = "Company", size = 300, position = 5)
-    public CustomCompany company;
+    private CustomCompany company;
 
     @SpreadSheetCell(name = "Birth date", size = 300, position = 6)
-    public String birthday;
+    private String birthday;
 
     @SpreadSheetCell(name = "Email", size = 300, position = 7)
-    public String email;
+    private String email;
 
     @SpreadSheetCell(name = "M", size = 80, position = 8)
-    public boolean gender;
+    private boolean gender;
 
 }
 
