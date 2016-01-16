@@ -38,7 +38,7 @@ public class MainActivity extends Activity {
         super.onResume();
 
         long diff = System.currentTimeMillis() - start;
-        System.out.println("TIME TO LOAD : "+diff);
+        System.out.println("TIME TO LOAD : " + diff);
     }
 
 }

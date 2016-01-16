@@ -195,7 +195,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
      *  View
      */
     private void addFixedHeader() {
-        if(mAdaptor.getFixedViews().size() == 0) return;
+        if (mAdaptor.getFixedViews().size() == 0) return;
 
         TableRow row = new TableRow(getContext());
         row.setLayoutParams(mAdaptor.getConfiguration().getTableLayoutParams());
@@ -239,7 +239,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     }
 
     private void AddFixedRow(boolean colorBool, int position) {
-        if(mAdaptor.getFixedViews().size() == 0) return;
+        if (mAdaptor.getFixedViews().size() == 0) return;
 
         TableRow row = new TableRow(getContext());
         row.setLayoutParams(mAdaptor.getConfiguration().getTableLayoutParams());
@@ -348,9 +348,9 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         TableRow row = (TableRow) (mHeader).getChildAt(0);
         for (int i = 0; i < row.getChildCount(); ++i) {
             ArrowButton childAt = (ArrowButton) row.getChildAt(i);
-            if(column == (int) childAt.getTag(R.id.filter_column_position)) {
+            if (column == (int) childAt.getTag(R.id.filter_column_position)) {
                 mColumnSortSelected = column;
-                if(mIsDESC) {
+                if (mIsDESC) {
                     childAt.setState(ArrowButton.states.UP);
                 } else {
                     childAt.setState(ArrowButton.states.DOWN);

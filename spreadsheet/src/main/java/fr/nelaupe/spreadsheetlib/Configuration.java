@@ -19,7 +19,7 @@ public class Configuration {
     private final float screenDensity;
 
     private final TableRow.LayoutParams wrapWrapTableRowParams;
-
+    private final Context mContext;
     private float mRowHeight;
     private float mHeaderTextSize;
     private float mTextSize;
@@ -31,8 +31,6 @@ public class Configuration {
     private int mTextGravity;
     private int mTextPaddingLeft;
     private int mTextPaddingRight;
-
-    private final Context mContext;
 
     public Configuration(Context context) {
         mContext = context;

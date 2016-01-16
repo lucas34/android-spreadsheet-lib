@@ -38,7 +38,7 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
         mConfiguration = new Configuration(context);
         mData = new ArrayList<>();
         mFixedViewData = new HashSet<>();
-        mFields  = new ArrayList<>();
+        mFields = new ArrayList<>();
         mDisplayOnly = new ArrayList<>();
     }
 
@@ -120,7 +120,9 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
 
     private void inspectFields() {
 
-        if(getData().isEmpty()) { return; }
+        if (getData().isEmpty()) {
+            return;
+        }
 
         mFields.clear();
         mFields.addAll(get(0).defineField());
@@ -141,7 +143,7 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
             inspectFields();
         }
 
-        if(mDisplayOnly.isEmpty()) {
+        if (mDisplayOnly.isEmpty()) {
             return mFields;
         } else {
             List<AnnotationFields> returned = new ArrayList<>();
