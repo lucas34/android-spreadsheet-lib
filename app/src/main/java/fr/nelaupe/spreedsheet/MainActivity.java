@@ -29,20 +29,8 @@ public class MainActivity extends Activity {
         }
     }
 
-    protected Data generateDummyData(int i) {
-        DataFactory df = new DataFactory();
-
-        Data data = new Data();
-        data.id = i;
-        data.first_name = df.getFirstName();
-        data.last_name = df.getLastName();
-        data.phone_number = df.getCity();
-        data.company = new CustomCompany(df.getBusinessName());
-        data.birthday = df.getBirthDate().toString();
-        data.email = df.getEmailAddress();
-        data.gender = i % 3 == 0;
-
-        return data;
+    protected Person generateDummyData(int i) {
+        return new Person(i, new DataFactory());
     }
 
     @Override
