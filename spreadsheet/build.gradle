@@ -24,6 +24,10 @@ android {
     }
 }
 
+dependencies {
+    compile project (':spreadsheet-annotation')
+}
+
 def generatePom() {
     def pom = pom {
         project {
