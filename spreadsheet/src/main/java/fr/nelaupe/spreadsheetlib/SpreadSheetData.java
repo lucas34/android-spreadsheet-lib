@@ -15,15 +15,11 @@
  */
 package fr.nelaupe.spreadsheetlib;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * Created with IntelliJ
  * Created by Lucas Nelaupe
  * Date 26/03/15
  */
 @SuppressWarnings({"unused", "unchecked"})
-public abstract class SpreadSheetData {}
+public abstract class SpreadSheetData {
+}

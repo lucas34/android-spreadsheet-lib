@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -14,7 +13,7 @@
         <TableLayout
             android:id="@+id/fixed_column_header"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
 
         <fr.nelaupe.spreadsheetlib.view.DispatcherHorizontalScrollView
@@ -25,7 +24,7 @@
             <TableLayout
                 android:id="@+id/table_header"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
         </fr.nelaupe.spreadsheetlib.view.DispatcherHorizontalScrollView>
 
@@ -44,7 +43,7 @@
             <TableLayout
                 android:id="@+id/fixed_column"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
             <fr.nelaupe.spreadsheetlib.view.DispatcherHorizontalScrollView
                 android:id="@+id/scrollViewHorizontal"
@@ -54,7 +53,7 @@
                 <TableLayout
                     android:id="@+id/scrollable_part"
                     android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"/>
+                    android:layout_height="fill_parent" />
 
             </fr.nelaupe.spreadsheetlib.view.DispatcherHorizontalScrollView>
 

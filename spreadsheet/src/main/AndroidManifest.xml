@@ -1,6 +1,5 @@
-<manifest
-    package="fr.nelaupe.spreadsheetlib"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="fr.nelaupe.spreadsheetlib">
 
     <application
         android:allowBackup="true"
