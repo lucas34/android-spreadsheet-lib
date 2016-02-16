@@ -3,8 +3,6 @@
  */
 package fr.nelaupe.spreadsheetlib;
 
-import java.lang.reflect.Field;
-
 /**
  * Created with IntelliJ
  * Created by lucas
@@ -12,27 +10,40 @@ import java.lang.reflect.Field;
  */
 public class AnnotationFields {
 
-    private Field mField;
-    private CellInformation mAnnotation;
+    private final String mName;
+    private final boolean mIsComparable;
 
-    public AnnotationFields(Field mField, CellInformation mAnnotation) {
-        this.mField = mField;
-        this.mAnnotation = mAnnotation;
+    private final String mFieldName;
+    private final int mColumnSize;
+    private final int mPosition;
+
+    public AnnotationFields(String annotationName, int annotationSize, int annotationPosition, String fieldName, boolean isComparable) {
+        this.mFieldName = fieldName;
+        this.mIsComparable = isComparable;
+
+        this.mName = annotationName;
+        this.mColumnSize = annotationSize;
+        this.mPosition = annotationPosition;
     }
 
-//    public String getAnnotationName() {
-//        return mAnnotation.get();
-//    }
-
-    public Field getField() {
-        return mField;
+    public boolean isComparable() {
+        return mIsComparable;
     }
 
     public String getFieldName() {
-        return mField.getName();
+        return mFieldName;
     }
 
-    public CellInformation getAnnotation() {
-        return mAnnotation;
+    public String getName() {
+        return mName;
     }
+
+    public int getColumnSize() {
+        return mColumnSize;
+    }
+
+    public int getPosition() {
+        return mPosition;
+    }
+
 }

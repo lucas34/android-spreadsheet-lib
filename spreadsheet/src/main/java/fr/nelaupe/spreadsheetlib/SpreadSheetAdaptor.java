@@ -3,10 +3,11 @@
  */
 package fr.nelaupe.spreadsheetlib;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.view.View;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -30,6 +31,7 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
     private Set<String> mFixedViewData;
     private List<AnnotationFields> mFields;
     private List<Integer> mDisplayOnly;
+    private BinderField<TSelf> mBindableClass;
 
     private OnItemClickListener<TSelf> mItemClickListener;
     private OnSortingListener mSortingListener;
@@ -110,14 +112,15 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
         return mConfiguration.getContext();
     }
 
-    public abstract View getCellView(CellInformation cell, Object object);
+    public abstract View getCellView(AnnotationFields cell, Object object);
 
-    public abstract ArrowButton getHeaderCellView(CellInformation cell);
+    public abstract ArrowButton getHeaderCellView(AnnotationFields cell);
 
     public abstract View getFixedHeaderView(String name);
 
     public abstract View getFixedCellView(String name, int position);
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     private void inspectFields() {
 
         if (getData().isEmpty()) {
@@ -125,13 +128,20 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
         }
 
         mFields.clear();
-        mFields.addAll(get(0).defineField());
+        try {
+            mBindableClass = (BinderField<TSelf>) Class.forName("fr.nelaupe.spreedsheet."+mData.get(0).getClass().getSimpleName()+"Binding").newInstance();
+            mFields = mBindableClass.fields;
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Missing binding class");
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
 
         Collections.sort(mFields, new Comparator<AnnotationFields>() {
             @Override
             public int compare(AnnotationFields lhs, AnnotationFields rhs) {
-                Integer positionL = lhs.getAnnotation().getPosition();
-                Integer positionR = rhs.getAnnotation().getPosition();
+                Integer positionL = lhs.getPosition();
+                Integer positionR = rhs.getPosition();
 
                 return positionL.compareTo(positionR);
             }
@@ -148,7 +158,7 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
         } else {
             List<AnnotationFields> returned = new ArrayList<>();
             for (AnnotationFields field : mFields) {
-                if (mDisplayOnly.contains(field.getAnnotation().getPosition())) {
+                if (mDisplayOnly.contains(field.getPosition())) {
                     returned.add(field);
                 }
             }
@@ -158,24 +168,25 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
 
     }
 
-    public Comparator<TSelf> sortBy(final Field field) {
-
-        return new Comparator<TSelf>() {
-            @Override
-            public int compare(TSelf lhs, TSelf rhs) {
-
-                try {
-                    Comparable lComparable = (Comparable) field.get(lhs);
-                    Comparable rComparable = (Comparable) field.get(rhs);
-
-                    return lComparable.compareTo(rComparable);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                    return 0;
-                }
-            }
-        };
+    public BinderField<TSelf> getBinder() {
+        return mBindableClass;
     }
+
+//
+//    public Comparator<TSelf> sortBy(final AnnotationFields field) {
+//
+//        return new Comparator<TSelf>() {
+//            @Override
+//            public int compare(TSelf lhs, TSelf rhs) {
+//
+//                Comparable lComparable = (Comparable) lhs.getValueAt(field.getFieldName());
+//                Comparable rComparable = (Comparable) rhs.getValueAt(field.getFieldName());
+//
+//                return lComparable.compareTo(rComparable);
+//
+//            }
+//        };
+//    }
 
 
 }

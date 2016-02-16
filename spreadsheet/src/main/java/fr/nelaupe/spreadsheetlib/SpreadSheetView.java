@@ -169,14 +169,9 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
             AnnotationFields annotationFields = mAdaptor.getFields().get(columnPosition);
 
             if (mAutoSorting) {
-                try {
-                    if (annotationFields.getField().get(mAdaptor.getData().get(0)) instanceof Comparable) {
-                        doSorting(columnPosition, mAdaptor.sortBy(annotationFields.getField()), annotationFields);
-                    }
-                } catch (IllegalAccessException e1) {
-                    e1.printStackTrace();
+                if (annotationFields.isComparable()) {
+//TODO                    doSorting(columnPosition, mAdaptor.sortBy(annotationFields), annotationFields);
                 }
-
             } else {
                 mIsDESC = mColumnSortSelected != columnPosition || !mIsDESC;
                 putArrow(columnPosition);
@@ -221,12 +216,11 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         int column = 0;
 
         for (AnnotationFields field : mAdaptor.getFields()) {
-            CellInformation spreadSheetCell = field.getAnnotation();
-            ArrowButton button = mAdaptor.getHeaderCellView(spreadSheetCell);
+            ArrowButton button = mAdaptor.getHeaderCellView(field);
             button.setPadding(mAdaptor.getConfiguration().getTextPaddingLeft(), 0, mAdaptor.getConfiguration().getTextPaddingRight(), 0);
             button.setOnClickListener(this);
             button.setId(R.id.filter);
-            button.setMinimumWidth(mAdaptor.getConfiguration().computeSize(spreadSheetCell.getSize()));
+            button.setMinimumWidth(mAdaptor.getConfiguration().computeSize(field.getColumnSize()));
             button.setMinimumHeight(mAdaptor.getConfiguration().getHeaderRowHeight());
             button.setPadding(mAdaptor.getConfiguration().getTextPaddingLeft(), 0, mAdaptor.getConfiguration().getTextPaddingRight(), 0);
             button.setTag(R.id.filter_column_position, column);
@@ -274,19 +268,13 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
             row.setOnClickListener(this);
 
             for (AnnotationFields field : mAdaptor.getFields()) {
-                CellInformation spreadSheetCell = field.getAnnotation();
-                try {
-                    Object object = field.getField().get(resource);
-                    View view = mAdaptor.getCellView(spreadSheetCell, object);
-                    view.setMinimumWidth(mAdaptor.getConfiguration().computeSize(spreadSheetCell.getSize()));
-                    view.setMinimumHeight(mAdaptor.getConfiguration().getRowHeight());
-                    view.setPadding(mAdaptor.getConfiguration().getTextPaddingLeft(), 0, mAdaptor.getConfiguration().getTextPaddingRight(), 0);
-                    row.addView(view);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
+                Object object = mAdaptor.getBinder().getValueAt(field.getFieldName(), resource);
+                View view = mAdaptor.getCellView(field, object);
+                view.setMinimumWidth(mAdaptor.getConfiguration().computeSize(field.getColumnSize()));
+                view.setMinimumHeight(mAdaptor.getConfiguration().getRowHeight());
+                view.setPadding(mAdaptor.getConfiguration().getTextPaddingLeft(), 0, mAdaptor.getConfiguration().getTextPaddingRight(), 0);
+                row.addView(view);
             }
-
 
             colorBool = !colorBool;
             mTable.addView(row);

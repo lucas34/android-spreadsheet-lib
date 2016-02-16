@@ -17,6 +17,7 @@ package fr.nelaupe.spreadsheetlib;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -25,20 +26,4 @@ import java.util.List;
  * Date 26/03/15
  */
 @SuppressWarnings({"unused", "unchecked"})
-public abstract class SpreadSheetData {
-
-    protected List<AnnotationFields> defineField() {
-        List<AnnotationFields> fields = new ArrayList<>();
-
-        for (Field field : this.getClass().getDeclaredFields()) {
-            field.setAccessible(true);
-            if (field.isAnnotationPresent(SpreadSheetCell.class)) {
-                fields.add(new AnnotationFields(field, new CellInformation(field.getAnnotation(SpreadSheetCell.class))));
-            }
-        }
-
-        return fields;
-
-    }
-
-}
+public abstract class SpreadSheetData {}

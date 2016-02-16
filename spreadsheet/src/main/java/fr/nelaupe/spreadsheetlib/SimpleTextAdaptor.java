@@ -25,21 +25,21 @@ public class SimpleTextAdaptor extends SpreadSheetAdaptor<SpreadSheetData> {
     }
 
     @Override
-    public View getCellView(CellInformation cell, Object object) {
+    public View getCellView(AnnotationFields cell, Object object) {
         TextView recyclableTextView = new TextView(getContext());
         recyclableTextView.setText((object == null ? "" : object.toString()));
         recyclableTextView.setTextColor(getConfiguration().getTextColor());
         recyclableTextView.setGravity(getConfiguration().getTextGravity());
         recyclableTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getConfiguration().getTextSize());
-        recyclableTextView.setWidth(getConfiguration().computeSize(cell.getSize()));
+        recyclableTextView.setWidth(getConfiguration().computeSize(cell.getColumnSize()));
         recyclableTextView.setHeight(getConfiguration().getRowHeight());
         return recyclableTextView;
     }
 
     @Override
-    public ArrowButton getHeaderCellView(CellInformation cell) {
+    public ArrowButton getHeaderCellView(AnnotationFields cell) {
         ArrowButton button = new ArrowButton(getContext());
-        button.setWidth(getConfiguration().computeSize(cell.getSize()));
+        button.setWidth(getConfiguration().computeSize(cell.getColumnSize()));
         button.setHeight(getConfiguration().getHeaderRowHeight());
         button.setTextColor(getConfiguration().getHeaderTextColor());
         button.setBackgroundResource(0);
