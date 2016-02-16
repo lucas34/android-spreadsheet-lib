@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
  * Date 26/03/15
  */
 @Target(ElementType.FIELD)
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(RetentionPolicy.CLASS)
 public @interface SpreadSheetCell {
     String name();
 
