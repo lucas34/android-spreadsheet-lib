@@ -1,12 +1,7 @@
 package fr.nelaupe.spreadsheet.compiler;
 
 import java.io.Writer;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -14,7 +9,6 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
@@ -45,7 +39,7 @@ public class SpreadSheetProcessor extends AbstractProcessor {
         }
 
         for (TypeElement key : classesWithFieldThatContainsAnnotations) {
-            System.out.println("Generation of the binder for class : "+ key);
+            System.out.println("Generation of the binder for class : " + key);
             generateBinder(env, key.getSimpleName().toString(), "fr.nelaupe.spreedsheet", key);
         }
 
@@ -67,7 +61,7 @@ public class SpreadSheetProcessor extends AbstractProcessor {
             writer.write("  public " + className + "Binding() { \n");
             writer.write("      this.fields = new java.util.ArrayList<>();\n");
             for (Element field : env.getElementsAnnotatedWith(SpreadSheetCell.class)) {
-                if(field.getEnclosingElement().getSimpleName().toString().equals(className)) {
+                if (field.getEnclosingElement().getSimpleName().toString().equals(className)) {
                     SpreadSheetCell annotation = field.getAnnotation(SpreadSheetCell.class);
                     writer.write("      this.fields.add(new fr.nelaupe.spreadsheetlib.AnnotationFields(\"" + annotation.name() + "\", " + annotation.size() + ", " + annotation.position() + ", \"" + field.getSimpleName() + "\", false));\n");
                 }
@@ -79,7 +73,7 @@ public class SpreadSheetProcessor extends AbstractProcessor {
             writer.write("      switch (fieldName) {\n");
             for (Element field : env.getElementsAnnotatedWith(SpreadSheetCell.class)) {
                 writer.write("  \n");
-                if(field.getEnclosingElement().getSimpleName().toString().equals(className)) {
+                if (field.getEnclosingElement().getSimpleName().toString().equals(className)) {
                     writer.write("          case \"" + field.getSimpleName() + "\" : {\n");
                     writer.write("              return data." + field.getSimpleName() + ";\n");
                     writer.write("          }\n");

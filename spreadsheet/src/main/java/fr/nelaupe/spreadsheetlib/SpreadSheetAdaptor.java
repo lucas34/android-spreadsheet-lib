@@ -27,10 +27,10 @@ import fr.nelaupe.spreadsheetlib.view.ArrowButton;
 @SuppressWarnings({"unused", "unchecked"})
 public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
 
-    private List<TSelf> mData;
-    private Configuration mConfiguration;
     private final Set<String> mFixedViewData;
     private final List<Integer> mDisplayOnly;
+    private List<TSelf> mData;
+    private Configuration mConfiguration;
     private BinderField<TSelf> mBindableClass;
     private Class<TSelf> mCurrentClass;
 
@@ -123,8 +123,8 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
     @TargetApi(Build.VERSION_CODES.KITKAT)
     private void inspectFields() {
 
-        if(mCurrentClass == null) {
-            if(mData.size() > 0) {
+        if (mCurrentClass == null) {
+            if (mData.size() > 0) {
                 mCurrentClass = (Class<TSelf>) mData.get(0).getClass();
             } else {
                 return;
@@ -152,11 +152,11 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
     }
 
     public List<AnnotationFields> getFields() {
-        if(mBindableClass == null || mBindableClass.fields.size() == 0) {
+        if (mBindableClass == null || mBindableClass.fields.size() == 0) {
             inspectFields();
         }
 
-        if(mBindableClass == null) {
+        if (mBindableClass == null) {
             return Collections.emptyList();
         }
 

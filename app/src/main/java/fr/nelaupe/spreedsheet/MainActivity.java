@@ -12,7 +12,6 @@ import org.fluttercode.datafactory.impl.DataFactory;
 
 import fr.nelaupe.spreadsheetlib.AnnotationFields;
 import fr.nelaupe.spreadsheetlib.SimpleTextAdaptor;
-import fr.nelaupe.spreadsheetlib.SpreadSheetAdaptor;
 import fr.nelaupe.spreadsheetlib.SpreadSheetView;
 
 public class MainActivity extends Activity {
