@@ -62,35 +62,33 @@ public class SpreadSheetProcessor extends AbstractProcessor {
             Writer writer = jfo.openWriter();
             writer.write("//Generated class\n");
             writer.write("package " + packageName + ";\n\n");
-            writer.write("public final class " + generatedClassName + " extends fr.nelaupe.spreadsheetlib.BinderField<" + className + "> {");
-            writer.write("  \n");
+            writer.write("public final class " + generatedClassName + " extends fr.nelaupe.spreadsheetlib.BinderField<" + className + "> {\n");
             writer.write("  \n\n");
-            writer.write("  public " + className + "Binding() { ");
-            writer.write("  \n");
-            writer.write("      this.fields = new java.util.ArrayList<>();");
-            writer.write("  \n");
+            writer.write("  public " + className + "Binding() { \n");
+            writer.write("      this.fields = new java.util.ArrayList<>();\n");
             for (Element field : env.getElementsAnnotatedWith(SpreadSheetCell.class)) {
                 if(field.getEnclosingElement().getSimpleName().toString().equals(className)) {
                     SpreadSheetCell annotation = field.getAnnotation(SpreadSheetCell.class);
-                    writer.write("      this.fields.add(new fr.nelaupe.spreadsheetlib.AnnotationFields(\"" + annotation.name() + "\", " + annotation.size() + ", " + annotation.position() + ", \"" + field.getSimpleName() + "\", false));");
-                    writer.write("  \n");
+                    writer.write("      this.fields.add(new fr.nelaupe.spreadsheetlib.AnnotationFields(\"" + annotation.name() + "\", " + annotation.size() + ", " + annotation.position() + ", \"" + field.getSimpleName() + "\", false));\n");
                 }
             }
             writer.write("  }\n");
-            writer.write("  @Override");
-            writer.write("  public Object getValueAt(String fieldName, " + className + " data) {");
-            writer.write("      switch (fieldName) {");
+            writer.write("  \n\n");
+            writer.write("  @Override\n");
+            writer.write("  public Object getValueAt(String fieldName, " + className + " data) {\n");
+            writer.write("      switch (fieldName) {\n");
             for (Element field : env.getElementsAnnotatedWith(SpreadSheetCell.class)) {
+                writer.write("  \n");
                 if(field.getEnclosingElement().getSimpleName().toString().equals(className)) {
-                    writer.write("      case \"" + field.getSimpleName() + "\" : {");
-                    writer.write("          return data." + field.getSimpleName() + ";");
-                    writer.write("   }");
+                    writer.write("          case \"" + field.getSimpleName() + "\" : {\n");
+                    writer.write("              return data." + field.getSimpleName() + ";\n");
+                    writer.write("          }\n");
                 }
             }
-            writer.write("  }");
-            writer.write("return null;");
-            writer.write("}");
-            writer.write("}");
+            writer.write("      }\n");
+            writer.write("      return null;\n");
+            writer.write("  }\n");
+            writer.write("}\n");
             writer.flush();
             writer.close();
 
