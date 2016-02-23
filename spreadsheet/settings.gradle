@@ -1,0 +1,4 @@
+include ':app', ':compiler', ':spreadsheet-annotation'
+
+include':spreadsheet'
+project(':spreadsheet').projectDir = new File('spreadsheet')
