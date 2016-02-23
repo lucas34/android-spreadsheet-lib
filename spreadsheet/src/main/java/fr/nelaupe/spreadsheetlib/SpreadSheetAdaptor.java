@@ -29,9 +29,10 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
 
     private List<TSelf> mData;
     private Configuration mConfiguration;
-    private Set<String> mFixedViewData;
-    private List<Integer> mDisplayOnly;
+    private final Set<String> mFixedViewData;
+    private final List<Integer> mDisplayOnly;
     private BinderField<TSelf> mBindableClass;
+    private Class<TSelf> mCurrentClass;
 
     private OnItemClickListener<TSelf> mItemClickListener;
     private OnSortingListener mSortingListener;
@@ -41,8 +42,6 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
         mData = new ArrayList<>();
         mFixedViewData = new HashSet<>();
         mDisplayOnly = new ArrayList<>();
-
-        inspectFields();
     }
 
     public void displayColumn(ArrayList<Integer> columnNumber) {
@@ -124,6 +123,14 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
     @TargetApi(Build.VERSION_CODES.KITKAT)
     private void inspectFields() {
 
+        if(mCurrentClass == null) {
+            if(mData.size() > 0) {
+                mCurrentClass = (Class<TSelf>) mData.get(0).getClass();
+            } else {
+                return;
+            }
+        }
+
         try {
             Class<TSelf> persistentClass = (Class<TSelf>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
             mBindableClass = (BinderField<TSelf>) Class.forName("fr.nelaupe.spreedsheet." + persistentClass.getSimpleName() + "Binding").newInstance();
@@ -145,6 +152,14 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
     }
 
     public List<AnnotationFields> getFields() {
+        if(mBindableClass == null || mBindableClass.fields.size() == 0) {
+            inspectFields();
+        }
+
+        if(mBindableClass == null) {
+            return Collections.emptyList();
+        }
+
         if (mDisplayOnly.isEmpty()) {
             return mBindableClass.fields;
         } else {
@@ -177,6 +192,12 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
 
             }
         };
+    }
+
+    public SpreadSheetAdaptor<TSelf> with(Class<TSelf> cls) {
+        mCurrentClass = cls;
+        inspectFields();
+        return this;
     }
 
 }
