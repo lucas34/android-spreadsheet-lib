@@ -1,4 +1,10 @@
 apply plugin: 'java'
+apply plugin: 'signing'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+
+group 'fr.nelaupe'
+version '1.1.0'
 
 sourceSets {
     main {
@@ -11,6 +17,89 @@ targetCompatibility = JavaVersion.VERSION_1_7
 
 dependencies {
     compile project(':spreadsheet-annotation')
-//    compile 'com.google.auto.service:auto-service:1.0-rc2'
     compile 'com.squareup:javapoet:1.0.0'
+}
+
+
+def generatePom() {
+    def pom = pom {
+        project {
+            name 'spreadsheet-lib-compiler'
+            packaging 'aar'
+            groupId project.group
+            artifactId 'spreadsheet-compiler'
+            version project.version
+            description 'Compiler for the Two-dimensional scrollable array'
+            inceptionYear '2015'
+            url 'http://www.lucas-nelaupe.fr'
+
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0'
+                    distribution 'repo'
+                }
+            }
+
+            scm {
+                url "https://github.com/lucas34/spreadsheet-lib"
+                connection "scm:git:git@github.com:lucas34/spreadsheet-lib.git"
+                developerConnection "scm:git:git@github.com:lucas34/spreadsheet-lib.git"
+            }
+
+
+            developers {
+                developer {
+                    id 'lucas34'
+                    name 'Lucas Nelaupe'
+                    email 'lucas34990@gmail.com'
+                    url 'http://www.lucas-nelaupe.fr'
+                    roles {
+                        role 'author'
+                        role 'developer'
+                    }
+                    timezone '+8'
+                }
+            }
+        }
+    }
+}
+
+signing {
+    required { has("release") && gradle.taskGraph.hasTask("uploadArchives") }
+    sign configurations.archives
+}
+
+uploadArchives {
+    if (project.hasProperty('sonatypeUsername')) {
+        repositories {
+            mavenDeployer {
+                beforeDeployment {
+                    MavenDeployment deployment -> signing.signPom(deployment)
+                }
+                pom = generatePom()
+                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                    authentication(userName: sonatypeUsername, password: sonatypePassword)
+                }
+                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots") {
+                    authentication(userName: sonatypeUsername, password: sonatypePassword)
+                }
+            }
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from 'src/main/java'
+}
+
+task javadocJar(type: Jar, dependsOn: "javadocRelease") {
+    classifier = 'javadoc'
+    from 'build/docs/javadoc'
+}
+
+artifacts {
+    archives sourcesJar
+    archives jar
 }
