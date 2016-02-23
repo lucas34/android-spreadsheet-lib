@@ -170,7 +170,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
 
             if (mAutoSorting) {
                 if (annotationFields.isComparable()) {
-//TODO                    doSorting(columnPosition, mAdaptor.sortBy(annotationFields), annotationFields);
+                    doSorting(columnPosition, mAdaptor.sortBy(annotationFields), annotationFields);
                 }
             } else {
                 mIsDESC = mColumnSortSelected != columnPosition || !mIsDESC;
