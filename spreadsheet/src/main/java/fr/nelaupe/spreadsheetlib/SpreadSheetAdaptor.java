@@ -25,13 +25,13 @@ import fr.nelaupe.spreadsheetlib.view.ArrowButton;
  * Date 26/03/15
  */
 @SuppressWarnings({"unused", "unchecked"})
-public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
+public abstract class SpreadSheetAdaptor<TSelf> {
 
     private final Set<String> mFixedViewData;
     private final List<Integer> mDisplayOnly;
     private List<TSelf> mData;
     private Configuration mConfiguration;
-    private BinderField<TSelf> mBindableClass;
+    private FieldBinder<TSelf> mBindableClass;
     private Class<TSelf> mCurrentClass;
 
     private OnItemClickListener<TSelf> mItemClickListener;
@@ -133,26 +133,16 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
 
         try {
             Class<TSelf> persistentClass = (Class<TSelf>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-            mBindableClass = (BinderField<TSelf>) Class.forName("fr.nelaupe.spreedsheet." + persistentClass.getSimpleName() + "Binding").newInstance();
+            mBindableClass = (FieldBinder<TSelf>) Class.forName("fr.nelaupe.spreedsheet." + persistentClass.getSimpleName() + "Binding").newInstance();
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("Missing binding class");
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
-
-        Collections.sort(mBindableClass.fields, new Comparator<AnnotationFields>() {
-            @Override
-            public int compare(AnnotationFields lhs, AnnotationFields rhs) {
-                Integer positionL = lhs.getPosition();
-                Integer positionR = rhs.getPosition();
-
-                return positionL.compareTo(positionR);
-            }
-        });
     }
 
     public List<AnnotationFields> getFields() {
-        if (mBindableClass == null || mBindableClass.fields.size() == 0) {
+        if (mBindableClass == null || mBindableClass.fields().size() == 0) {
             inspectFields();
         }
 
@@ -161,21 +151,21 @@ public abstract class SpreadSheetAdaptor<TSelf extends SpreadSheetData> {
         }
 
         if (mDisplayOnly.isEmpty()) {
-            return mBindableClass.fields;
+            return Collections.unmodifiableList(mBindableClass.fields());
         } else {
             List<AnnotationFields> returned = new ArrayList<>();
-            for (AnnotationFields field : mBindableClass.fields) {
+            for (AnnotationFields field : mBindableClass.fields()) {
                 if (mDisplayOnly.contains(field.getPosition())) {
                     returned.add(field);
                 }
             }
 
-            return returned;
+            return Collections.unmodifiableList(returned);
         }
 
     }
 
-    BinderField<TSelf> getBinder() {
+    FieldBinder<TSelf> getBinder() {
         return mBindableClass;
     }
 

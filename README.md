@@ -21,7 +21,7 @@ compile 'fr.nelaupe:spreadsheet-runtime:1.1.0'
 Define the datas
 
 ``` java
-public class Person extends SpreadSheetData {
+public class Person {
 	
     @SpreadSheetCell(name = "ID", size = 100, position = 1)
     private Integer id;
@@ -75,13 +75,11 @@ Activity
 
 ``` java
 
-SpreadSheetView spreadSheetView = (SpreadSheetView) findViewById(R.id.spread_sheet);
-for (int i = 0; i < 30; i++) {
-	Data data = new Data();
-	// Fill the data
+SpreadSheetAdaptor adaptor = new SpreadSheetAdaptor(context);
+// Fill data
 
-	spreadSheetView.getAdaptor().add(data);
-}
+SpreadSheetView spreadSheetView = (SpreadSheetView) findViewById(R.id.spread_sheet);
+spreadSheetView.setAdaptor(adaptor);
 spreadSheetView.invalidate();
 
 ```

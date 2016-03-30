@@ -27,14 +27,14 @@ public class MainActivity extends Activity {
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
 
-        SpreadSheetView spreadSheetView = (SpreadSheetView) findViewById(R.id.spread_sheet);
         PersonAdaptor personAdaptor = new PersonAdaptor(this);
-        spreadSheetView.setAdaptor(personAdaptor);
 
         for (int i = 0; i < 30; i++) {
-            spreadSheetView.getAdaptor().add(new Person(i, new DataFactory(), sdf));
+            personAdaptor.add(new Person(i, new DataFactory(), sdf));
         }
 
+        SpreadSheetView spreadSheetView = (SpreadSheetView) findViewById(R.id.spread_sheet);
+        spreadSheetView.setAdaptor(personAdaptor);
         spreadSheetView.invalidate();
     }
 

@@ -28,7 +28,6 @@ import android.widget.TableRow;
 
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 import fr.nelaupe.spreadsheetlib.view.ArrowButton;
 import fr.nelaupe.spreadsheetlib.view.DispatcherHorizontalScrollView;
@@ -51,7 +50,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
 
     private boolean mAutoSorting;
 
-    private SpreadSheetAdaptor<SpreadSheetData> mAdaptor;
+    private SpreadSheetAdaptor<?> mAdaptor;
 
     public SpreadSheetView(Context context) {
         super(context);
@@ -138,26 +137,6 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         scrollViewTab.setHorizontalScrollBarEnabled(true);
     }
 
-    @Deprecated
-    public List<? extends SpreadSheetData> getData() {
-        return mAdaptor.getData();
-    }
-
-    @Deprecated
-    public void add(SpreadSheetData data) {
-        mAdaptor.add(data);
-    }
-
-    @Deprecated
-    public void addAll(List<SpreadSheetData> data) {
-        mAdaptor.addAll(data);
-    }
-
-    @Deprecated
-    public void clearData() {
-        mAdaptor.clearData();
-    }
-
     @Override
     public void onClick(View v) {
 
@@ -181,7 +160,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         } else if (i == R.id.item) {
             Integer position = (Integer) v.getTag(R.id.item_number);
             if (mAdaptor.getItemClickListener() != null) {
-                mAdaptor.getItemClickListener().onItemClick(mAdaptor.get(position));
+                adaptor().getItemClickListener().onItemClick(mAdaptor.get(position));
             }
         }
     }
@@ -255,7 +234,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         Boolean colorBool = true;
         int position = 0;
 
-        for (SpreadSheetData resource : mAdaptor.getData()) {
+        for (Object resource : mAdaptor.getData()) {
 
             AddFixedRow(colorBool, position);
 
@@ -268,7 +247,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
             row.setOnClickListener(this);
 
             for (AnnotationFields field : mAdaptor.getFields()) {
-                Object object = mAdaptor.getBinder().getValueAt(field.getFieldName(), resource);
+                Object object = binder().getValueAt(field.getFieldName(), resource);
                 View view = mAdaptor.getCellView(field, object);
                 view.setMinimumWidth(mAdaptor.getConfiguration().computeSize(field.getColumnSize()));
                 view.setMinimumHeight(mAdaptor.getConfiguration().getRowHeight());
@@ -280,6 +259,14 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
             mTable.addView(row);
             position++;
         }
+    }
+
+    private <T> FieldBinder<T> binder() {
+        return (FieldBinder<T>) mAdaptor.getBinder();
+    }
+
+    private <T> SpreadSheetAdaptor<T> adaptor() {
+        return (SpreadSheetAdaptor<T>) mAdaptor;
     }
 
     @Override
@@ -319,7 +306,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         Collections.sort(mAdaptor.getData(), comparator);
     }
 
-    private void doSorting(int columnId, Comparator<? extends SpreadSheetData> comparator, AnnotationFields annotationFields) {
+    private <T> void doSorting(int columnId, Comparator<T> comparator, AnnotationFields annotationFields) {
         if (mColumnSortSelected == columnId) {
             invert(columnId);
             mIsDESC = !mIsDESC;
@@ -354,7 +341,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         mIsDESC = isDESC;
     }
 
-    public SpreadSheetAdaptor<SpreadSheetData> getAdaptor() {
+    public SpreadSheetAdaptor getAdaptor() {
         return mAdaptor;
     }
 

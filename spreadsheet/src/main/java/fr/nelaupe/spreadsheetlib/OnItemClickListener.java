@@ -22,7 +22,7 @@ package fr.nelaupe.spreadsheetlib;
  * Date 26/03/15
  */
 @SuppressWarnings("unused")
-public interface OnItemClickListener<TSelf extends SpreadSheetData> {
+public interface OnItemClickListener<TSelf> {
 
     void onItemClick(TSelf item);
 

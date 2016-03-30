@@ -56,16 +56,20 @@ public class SpreadSheetProcessor extends AbstractProcessor {
             Writer writer = jfo.openWriter();
             writer.write("//Generated class\n");
             writer.write("package " + packageName + ";\n\n");
-            writer.write("public final class " + generatedClassName + " extends fr.nelaupe.spreadsheetlib.BinderField<" + className + "> {\n");
-            writer.write("  \n\n");
-            writer.write("  public " + className + "Binding() { \n");
-            writer.write("      this.fields = new java.util.ArrayList<>();\n");
+            writer.write("public final class " + generatedClassName + " extends fr.nelaupe.spreadsheetlib.FieldBinder<" + className + "> {\n");
+            writer.write("  \n");
+            writer.write("  public " + className + "Binding() {} \n");
+            writer.write("  \n");
+            writer.write("  @Override\n");
+            writer.write("  protected java.util.List<fr.nelaupe.spreadsheetlib.AnnotationFields> fill() {\n");
+            writer.write("      java.util.List<fr.nelaupe.spreadsheetlib.AnnotationFields> fields = new java.util.ArrayList<>();\n");
             for (Element field : env.getElementsAnnotatedWith(SpreadSheetCell.class)) {
                 if (field.getEnclosingElement().getSimpleName().toString().equals(className)) {
                     SpreadSheetCell annotation = field.getAnnotation(SpreadSheetCell.class);
-                    writer.write("      this.fields.add(new fr.nelaupe.spreadsheetlib.AnnotationFields(\"" + annotation.name() + "\", " + annotation.size() + ", " + annotation.position() + ", \"" + field.getSimpleName() + "\", false));\n");
+                    writer.write("      fields.add(new fr.nelaupe.spreadsheetlib.AnnotationFields(\"" + annotation.name() + "\", " + annotation.size() + ", " + annotation.position() + ", \"" + field.getSimpleName() + "\", false));\n");
                 }
             }
+            writer.write("      return fields;\n");
             writer.write("  }\n");
             writer.write("  \n\n");
             writer.write("  @Override\n");

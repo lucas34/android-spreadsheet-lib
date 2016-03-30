@@ -18,7 +18,7 @@ import fr.nelaupe.spreadsheetlib.view.ArrowButton;
  * Created by lucas
  * Date 26/03/15
  */
-public class SimpleTextAdaptor<TSelf extends SpreadSheetData> extends SpreadSheetAdaptor<TSelf> {
+public class SimpleTextAdaptor<TSelf> extends SpreadSheetAdaptor<TSelf> {
 
     public SimpleTextAdaptor(Context context) {
         super(context);

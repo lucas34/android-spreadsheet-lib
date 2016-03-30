@@ -8,7 +8,6 @@ import org.fluttercode.datafactory.impl.DataFactory;
 import java.text.SimpleDateFormat;
 
 import fr.nelaupe.spreadsheetlib.SpreadSheetCell;
-import fr.nelaupe.spreadsheetlib.SpreadSheetData;
 
 /**
  * Created with IntelliJ
@@ -16,7 +15,7 @@ import fr.nelaupe.spreadsheetlib.SpreadSheetData;
  * Date 26/03/15
  */
 @SuppressWarnings("all")
-public class Person extends SpreadSheetData {
+public class Person {
 
     @SpreadSheetCell(name = "ID", size = 100, position = 1)
     public Integer id;
