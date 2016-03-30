@@ -5,6 +5,8 @@ package fr.nelaupe.spreedsheet;
 
 import org.fluttercode.datafactory.impl.DataFactory;
 
+import java.text.SimpleDateFormat;
+
 import fr.nelaupe.spreadsheetlib.SpreadSheetCell;
 import fr.nelaupe.spreadsheetlib.SpreadSheetData;
 
@@ -15,8 +17,6 @@ import fr.nelaupe.spreadsheetlib.SpreadSheetData;
  */
 @SuppressWarnings("all")
 public class Person extends SpreadSheetData {
-
-    // Put ONLY The DATA that you need to display !!
 
     @SpreadSheetCell(name = "ID", size = 100, position = 1)
     public Integer id;
@@ -33,7 +33,7 @@ public class Person extends SpreadSheetData {
     @SpreadSheetCell(name = "Company", size = 300, position = 5)
     public CustomCompany company;
 
-    @SpreadSheetCell(name = "Birth date", size = 300, position = 6)
+    @SpreadSheetCell(name = "Birth date", size = 200, position = 6)
     public String birthday;
 
     @SpreadSheetCell(name = "Email", size = 300, position = 7)
@@ -42,13 +42,13 @@ public class Person extends SpreadSheetData {
     @SpreadSheetCell(name = "M", size = 80, position = 8)
     public boolean gender;
 
-    public Person(int id, DataFactory dataFactory) {
+    public Person(int id, DataFactory dataFactory, SimpleDateFormat simpleDateFormat) {
         this.id = id;
         this.firstName = dataFactory.getFirstName();
         this.lastName = dataFactory.getLastName();
         this.city = dataFactory.getCity();
         this.company = new CustomCompany(dataFactory.getBusinessName());
-        this.birthday = dataFactory.getBirthDate().toString();
+        this.birthday = simpleDateFormat.format(dataFactory.getBirthDate());
         this.email = dataFactory.getEmailAddress();
         this.gender = id % 3 == 0;
     }
