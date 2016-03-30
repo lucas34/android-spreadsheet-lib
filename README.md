@@ -4,16 +4,16 @@
 
 Automatic creation of two-dimensional scrollable array for Android
 
-## Add Dependency
+## Add Dependencies
 
 <a href='http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22fr.nelaupe%22%20AND%20a%3A%22spreadsheet%22'><img src='http://img.shields.io/maven-central/v/fr.nelaupe/spreadsheet.svg'></a>
 
 **Gradle dependencies**
 
 ``` groovy
-compile 'fr.nelaupe:spreadsheet:1.1.0'
-compile 'fr.nelaupe:spreadsheet-compiler:1.1.0'
-compile 'fr.nelaupe:spreadsheet-runtime:1.1.0'   
+compile 'fr.nelaupe:spreadsheet:1.1.1'
+compile 'fr.nelaupe:spreadsheet-compiler:1.1.1'
+compile 'fr.nelaupe:spreadsheet-runtime:1.1.1'   
 ```
 
 ## Sample
