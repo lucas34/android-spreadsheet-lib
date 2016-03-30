@@ -1,8 +1,113 @@
 apply plugin: 'java'
 
+group 'fr.nelaupe'
+version '1.1.0'
+
+sourceSets {
+    main {
+        java.srcDirs = ['src/main/java']
+    }
+}
+
 sourceCompatibility = JavaVersion.VERSION_1_7
 targetCompatibility = JavaVersion.VERSION_1_7
 
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+//region Maven
+
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+def sonatypeRepositoryUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/";
+
+javadoc {
+    failOnError = false
+    title = "Compiler for the Spreadsheet ${version} API"
 }
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from 'build/docs/javadoc'
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+artifacts {
+    archives jar
+    archives javadocJar
+    archives sourcesJar
+}
+
+signing {
+    if(project.hasProperty('signing.keyId') && project.hasProperty('signing.password') &&
+            project.hasProperty('signing.secretKeyRingFile')) {
+        sign configurations.archives
+    } else {
+        println "Signing information missing/incomplete for ${project.name}"
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            if (project.hasProperty('preferedRepo') && project.hasProperty('preferedUsername')
+                    && project.hasProperty('preferedPassword')) {
+                configuration = configurations.deployerJars
+                repository(url: preferedRepo) {
+                    authentication(userName: preferedUsername, password: preferedPassword)
+                }
+            } else if (project.hasProperty('sonatypeUsername') && project.hasProperty('sonatypePassword')) {
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+                repository(url: sonatypeRepositoryUrl) {
+                    authentication(userName: sonatypeUsername, password: sonatypePassword)
+                }
+            } else {
+                println "Settings sonatypeUsername/sonatypePassword missing/incomplete for ${project.name}"
+            }
+
+            pom.project {
+                name 'spreadsheet-lib-runtime'
+                packaging 'jar'
+                groupId project.group
+                artifactId 'spreadsheet-lib-runtime'
+                version project.version
+                description 'Compiler for the Two-dimensional scrollable array'
+                inceptionYear '2015'
+                url 'http://www.lucas-nelaupe.fr'
+
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0'
+                        distribution 'repo'
+                    }
+                }
+
+                scm {
+                    url "https://github.com/lucas34/spreadsheet-lib"
+                    connection "scm:git:git@github.com:lucas34/spreadsheet-lib.git"
+                    developerConnection "scm:git:git@github.com:lucas34/spreadsheet-lib.git"
+                }
+
+
+                developers {
+                    developer {
+                        id 'lucas34'
+                        name 'Lucas Nelaupe'
+                        email 'lucas34990@gmail.com'
+                        url 'http://www.lucas-nelaupe.fr'
+                        roles {
+                            role 'author'
+                            role 'developer'
+                        }
+                        timezone '+8'
+                    }
+                }
+            }
+        }
+    }
+}
+
+//endregion
