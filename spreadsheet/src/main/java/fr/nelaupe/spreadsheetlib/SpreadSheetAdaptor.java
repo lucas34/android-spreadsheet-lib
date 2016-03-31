@@ -4,7 +4,6 @@
 package fr.nelaupe.spreadsheetlib;
 
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.os.Build;
 import android.view.View;
 
@@ -38,8 +37,8 @@ public abstract class SpreadSheetAdaptor<TSelf> {
     private OnItemClickListener<TSelf> mItemClickListener;
     private OnSortingListener mSortingListener;
 
-    public SpreadSheetAdaptor(Context context) {
-        mConfiguration = new Configuration(context);
+    public SpreadSheetAdaptor() {
+        mConfiguration = new Configuration();
         mData = new ArrayList<>();
         mFixedViewData = new HashSet<>();
         mDisplayOnly = new ArrayList<>();
@@ -136,10 +135,6 @@ public abstract class SpreadSheetAdaptor<TSelf> {
 
     public void setConfiguration(Configuration configuration) {
         mConfiguration = configuration;
-    }
-
-    public Context getContext() {
-        return mConfiguration.getContext();
     }
 
     public abstract View getCellView(AnnotationFields cell, Object object);

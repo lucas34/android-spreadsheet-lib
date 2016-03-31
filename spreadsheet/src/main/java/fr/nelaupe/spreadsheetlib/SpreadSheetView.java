@@ -281,6 +281,7 @@ public class SpreadSheetView extends LinearLayout {
     }
 
     public <T> void setAdaptor(SpreadSheetAdaptor<T> adaptor) {
+        adaptor.getConfiguration().init(getResources());
         mAdaptor = adaptor;
         invalidate();
     }

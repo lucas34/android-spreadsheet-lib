@@ -16,7 +16,7 @@ import android.widget.TableRow;
 public class Configuration {
 
     private static final int mDefaultTextGravity = Gravity.LEFT | Gravity.START | Gravity.CENTER_VERTICAL;
-    private final float screenDensity;
+    private float screenDensity;
 
     private final TableRow.LayoutParams wrapWrapTableRowParams;
     private float mRowHeight;
@@ -31,10 +31,13 @@ public class Configuration {
     private int mTextPaddingLeft;
     private int mTextPaddingRight;
 
-    public Configuration(Resources resources) {
-        screenDensity = resources.getDisplayMetrics().density;
+    public Configuration() {
         wrapWrapTableRowParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, mDefaultTextGravity);
         mTextGravity = mDefaultTextGravity;
+    }
+
+    void init(Resources resources) {
+        screenDensity = resources.getDisplayMetrics().density;
     }
 
     /*
