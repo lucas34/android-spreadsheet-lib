@@ -2,7 +2,9 @@
 
 <img src='https://travis-ci.org/lucas34/android-spreadsheet-lib.svg?branch=master'>
 
-Automatic creation of two-dimensional scrollable array for Android
+Automatic creation of two-dimensional scrollable spreadsheet for Android.
+The spreadsheet is automatically generated, any entity can be diplayed. No extends is needed. The library is using annotations android processor to generate the array. No reflection API is used at runtime. 
+The library requires at least Android 1.6 Donut (API level 4).
 
 ## Add Dependencies
 
@@ -19,7 +21,7 @@ compile 'fr.nelaupe:spreadsheet-compiler:1.1.1'
 
 ![Result](https://github.com/lucas34/android-spreadsheet-lib/blob/master/image/sample.gif)
 
-Define the data
+Create your entity
 
 ``` java
 public class Person {
@@ -86,7 +88,7 @@ spreadSheetView.invalidate();
 ```
 
 
-## Contributors
+## Contributor
 
 * [Lucas Nelaupe](http://www.lucas-nelaupe.fr/) - <https://github.com/lucas34>
 
