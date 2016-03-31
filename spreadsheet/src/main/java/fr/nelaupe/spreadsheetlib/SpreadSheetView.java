@@ -71,7 +71,6 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     public SpreadSheetView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mAdaptor = new SimpleTextAdaptor(getContext());
-        mAutoSorting = true;
         parseAttribute(context, attrs);
         init();
     }
@@ -80,7 +79,6 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     public SpreadSheetView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         mAdaptor = new SimpleTextAdaptor(getContext());
-        mAutoSorting = true;
         parseAttribute(context, attrs);
         init();
     }
@@ -118,8 +116,6 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     }
 
     private void init() {
-        mIsDESC = false;
-
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View inflatedView = inflater.inflate(R.layout.spread_sheet_layout, this, true);
 
@@ -285,7 +281,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         addHeader();
         addRow();
 
-        putArrow(mColumnSortSelected);
+        showArrow();
     }
 
     private void invalidateContent() {
@@ -295,36 +291,14 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         addRow();
     }
 
-    /*
-     *  Sorting
-     */
-    private void invert(int columnId) {
-        Collections.reverse(mAdaptor.getData());
-    }
+    private void showArrow() {
+        boolean mIsDESC = binder().isSortingDESC();
+        int mColumnSortSelected = binder().getSortingColumnSelected();
 
-    private void sort(int columnId, Comparator comparator) {
-        Collections.sort(mAdaptor.getData(), comparator);
-    }
-
-    private <T> void doSorting(int columnId, Comparator<T> comparator, AnnotationFields annotationFields) {
-        if (mColumnSortSelected == columnId) {
-            invert(columnId);
-            mIsDESC = !mIsDESC;
-        } else {
-            sort(columnId, comparator);
-            mIsDESC = false;
-        }
-        putArrow(columnId);
-        mAdaptor.onSort(annotationFields, mIsDESC);
-        invalidateContent();
-    }
-
-    private void putArrow(int column) {
         TableRow row = (TableRow) (mHeader).getChildAt(0);
         for (int i = 0; i < row.getChildCount(); ++i) {
             ArrowButton childAt = (ArrowButton) row.getChildAt(i);
-            if (column == (int) childAt.getTag(R.id.filter_column_position)) {
-                mColumnSortSelected = column;
+            if (mColumnSortSelected == (int) childAt.getTag(R.id.filter_column_position)) {
                 if (mIsDESC) {
                     childAt.setState(ArrowButton.states.UP);
                 } else {
@@ -334,11 +308,6 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
                 childAt.setState(ArrowButton.states.NONE);
             }
         }
-    }
-
-    public void setArrow(int column, boolean isDESC) {
-        mColumnSortSelected = column;
-        mIsDESC = isDESC;
     }
 
     public SpreadSheetAdaptor getAdaptor() {
