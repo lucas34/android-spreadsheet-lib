@@ -24,7 +24,6 @@ import fr.nelaupe.spreadsheetlib.view.ArrowButton;
  * Created by lucas
  * Date 26/03/15
  */
-@SuppressWarnings({"unused", "unchecked"})
 public abstract class SpreadSheetAdaptor<TSelf> {
 
     private final Set<String> mFixedViewData;
@@ -33,6 +32,7 @@ public abstract class SpreadSheetAdaptor<TSelf> {
     private Configuration mConfiguration;
     private FieldBinder<TSelf> mBindableClass;
     private Class<TSelf> mCurrentClass;
+    private boolean mAutoSorting;
 
     private OnItemClickListener<TSelf> mItemClickListener;
     private OnSortingListener mSortingListener;
@@ -42,6 +42,7 @@ public abstract class SpreadSheetAdaptor<TSelf> {
         mData = new ArrayList<>();
         mFixedViewData = new HashSet<>();
         mDisplayOnly = new ArrayList<>();
+        mAutoSorting = true;
     }
 
     public void displayColumn(ArrayList<Integer> columnNumber) {
@@ -78,17 +79,50 @@ public abstract class SpreadSheetAdaptor<TSelf> {
         this.mSortingListener = mSortingListener;
     }
 
-    public void onSort(AnnotationFields annotationFields, boolean isDESC) {
-        if (mSortingListener != null) {
-            mSortingListener.onSort(annotationFields, isDESC);
+    boolean onSort(AnnotationFields annotationFields, int columnPosition) {
+        if (mAutoSorting) {
+            if (annotationFields.isComparable()) {
+                doSorting(columnPosition, sortBy(annotationFields));
+                return true;
+            }
+        } else if (mSortingListener != null) {
+            getBinder().setIsDESC(getBinder().getSortingColumnSelected() != columnPosition || !getBinder().isSortingDESC());
+            mSortingListener.onSort(annotationFields, getBinder().isSortingDESC());
+            return true;
         }
+        return false;
+    }
+
+    private void invert() {
+        Collections.reverse(getData());
+    }
+
+    private <T> void doSorting(int columnId, Comparator<T> comparator) {
+        if (getBinder().getSortingColumnSelected() == columnId) {
+            invert();
+            getBinder().invertSorting();
+        } else {
+            Collections.sort(getData(), (Comparator<? super TSelf>) comparator);
+            getBinder().setIsDESC(false);
+            getBinder().setColumnSortSelected(columnId);
+        }
+    }
+
+    public void setArrow(int column, boolean isDESC) {
+        getBinder().setIsDESC(isDESC);
+        getBinder().setColumnSortSelected(column);
     }
 
     public void setOnItemClickListener(OnItemClickListener<TSelf> listener) {
         mItemClickListener = listener;
     }
 
+    @Deprecated
     public OnItemClickListener<TSelf> getItemClickListener() {
+        return mItemClickListener;
+    }
+
+    public OnItemClickListener<TSelf> getOnItemClickListener() {
         return mItemClickListener;
     }
 
@@ -188,6 +222,10 @@ public abstract class SpreadSheetAdaptor<TSelf> {
         mCurrentClass = cls;
         inspectFields();
         return this;
+    }
+
+    public void setAutoSorting(boolean isAutoSort) {
+        mAutoSorting = isAutoSort;
     }
 
 }
