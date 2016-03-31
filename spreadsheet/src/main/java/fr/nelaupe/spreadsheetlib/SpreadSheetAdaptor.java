@@ -24,6 +24,7 @@ import fr.nelaupe.spreadsheetlib.view.ArrowButton;
  * Created by lucas
  * Date 26/03/15
  */
+@SuppressWarnings({"unused", "unchecked"})
 public abstract class SpreadSheetAdaptor<TSelf> {
 
     private final Set<String> mFixedViewData;
@@ -117,12 +118,7 @@ public abstract class SpreadSheetAdaptor<TSelf> {
         mItemClickListener = listener;
     }
 
-    @Deprecated
-    public OnItemClickListener<TSelf> getItemClickListener() {
-        return mItemClickListener;
-    }
-
-    public OnItemClickListener<TSelf> getOnItemClickListener() {
+    OnItemClickListener<TSelf> getOnItemClickListener() {
         return mItemClickListener;
     }
 
@@ -175,7 +171,7 @@ public abstract class SpreadSheetAdaptor<TSelf> {
         }
     }
 
-    public List<AnnotationFields> getFields() {
+    List<AnnotationFields> getFields() {
         if (mBindableClass == null || mBindableClass.fields().size() == 0) {
             inspectFields();
         }
@@ -203,7 +199,7 @@ public abstract class SpreadSheetAdaptor<TSelf> {
         return mBindableClass;
     }
 
-    public final Comparator<TSelf> sortBy(final AnnotationFields field) {
+    final Comparator<TSelf> sortBy(final AnnotationFields field) {
 
         return new Comparator<TSelf>() {
             @Override
