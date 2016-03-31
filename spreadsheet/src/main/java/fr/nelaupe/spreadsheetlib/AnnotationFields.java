@@ -27,7 +27,7 @@ public class AnnotationFields {
     }
 
     public boolean isComparable() {
-        return mIsComparable;
+        return true;
     }
 
     public String getFieldName() {
