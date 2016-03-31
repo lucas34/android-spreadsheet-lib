@@ -17,10 +17,9 @@ compile 'fr.nelaupe:spreadsheet-compiler:1.1.1'
 
 ## Sample
 
-![Result](https://github.com/lucas34/android-spreadsheet-lib/image/sample.gif)
+![Result](https://github.com/lucas34/android-spreadsheet-lib/blob/master/image/sample.gif)
 
-
-Define the datas
+Define the data
 
 ``` java
 public class Person {
