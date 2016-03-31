@@ -26,9 +26,6 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
-import java.util.Collections;
-import java.util.Comparator;
-
 import fr.nelaupe.spreadsheetlib.view.ArrowButton;
 import fr.nelaupe.spreadsheetlib.view.DispatcherHorizontalScrollView;
 
@@ -37,32 +34,27 @@ import fr.nelaupe.spreadsheetlib.view.DispatcherHorizontalScrollView;
  * Created by Lucas Nelaupe
  * Date 26/03/15
  */
-@SuppressWarnings({"unused", "unchecked"})
-public class SpreadSheetView extends LinearLayout implements View.OnClickListener {
-
-    private int mColumnSortSelected;
-    private boolean mIsDESC;
+@SuppressWarnings("unused")
+public class SpreadSheetView extends LinearLayout {
 
     private TableLayout mHeader;
     private TableLayout mTable;
     private TableLayout mFixed;
     private TableLayout mFixedHeader;
 
-    private boolean mAutoSorting;
-
     private SpreadSheetAdaptor<?> mAdaptor;
+    private View.OnClickListener clickListener = new OnClickIntervalHandler();
 
     public SpreadSheetView(Context context) {
         super(context);
         mAdaptor = new SimpleTextAdaptor(getContext());
-        mAutoSorting = true;
         init();
     }
+
 
     public SpreadSheetView(Context context, AttributeSet attrs) {
         super(context, attrs);
         mAdaptor = new SimpleTextAdaptor(getContext());
-        mAutoSorting = true;
         parseAttribute(context, attrs);
         init();
     }
@@ -133,34 +125,6 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         scrollViewTab.setHorizontalScrollBarEnabled(true);
     }
 
-    @Override
-    public void onClick(View v) {
-
-        int i = v.getId();
-
-        if (i == R.id.filter) {
-
-            int columnPosition = (Integer) v.getTag(R.id.filter_column_position);
-            AnnotationFields annotationFields = mAdaptor.getFields().get(columnPosition);
-
-            if (mAutoSorting) {
-                if (annotationFields.isComparable()) {
-                    doSorting(columnPosition, mAdaptor.sortBy(annotationFields), annotationFields);
-                }
-            } else {
-                mIsDESC = mColumnSortSelected != columnPosition || !mIsDESC;
-                putArrow(columnPosition);
-                mAdaptor.onSort(annotationFields, mIsDESC);
-            }
-
-        } else if (i == R.id.item) {
-            Integer position = (Integer) v.getTag(R.id.item_number);
-            if (mAdaptor.getItemClickListener() != null) {
-                adaptor().getItemClickListener().onItemClick(mAdaptor.get(position));
-            }
-        }
-    }
-
     /*
      *  View
      */
@@ -193,7 +157,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         for (AnnotationFields field : mAdaptor.getFields()) {
             ArrowButton button = mAdaptor.getHeaderCellView(field);
             button.setPadding(mAdaptor.getConfiguration().getTextPaddingLeft(), 0, mAdaptor.getConfiguration().getTextPaddingRight(), 0);
-            button.setOnClickListener(this);
+            button.setOnClickListener(clickListener);
             button.setId(R.id.filter);
             button.setMinimumWidth(mAdaptor.getConfiguration().computeSize(field.getColumnSize()));
             button.setMinimumHeight(mAdaptor.getConfiguration().getHeaderRowHeight());
@@ -240,7 +204,7 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
             row.setBackgroundColor(getResources().getColor(colorBool ? R.color.white : R.color.grey_cell));
             row.setId(R.id.item);
             row.setTag(R.id.item_number, position);
-            row.setOnClickListener(this);
+            row.setOnClickListener(clickListener);
 
             for (AnnotationFields field : mAdaptor.getFields()) {
                 Object object = binder().getValueAt(field.getFieldName(), resource);
@@ -258,10 +222,12 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
     }
 
     private <T> FieldBinder<T> binder() {
+        //noinspection unchecked
         return (FieldBinder<T>) mAdaptor.getBinder();
     }
 
     private <T> SpreadSheetAdaptor<T> adaptor() {
+        //noinspection unchecked
         return (SpreadSheetAdaptor<T>) mAdaptor;
     }
 
@@ -319,8 +285,25 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         invalidate();
     }
 
-    public void setAutoSorting(boolean isAutoSort) {
-        mAutoSorting = isAutoSort;
+    private final class OnClickIntervalHandler implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            int i = v.getId();
+
+            if (i == R.id.filter) {
+                int columnPosition = (Integer) v.getTag(R.id.filter_column_position);
+                AnnotationFields annotationFields = mAdaptor.getFields().get(columnPosition);
+                if (adaptor().onSort(annotationFields, columnPosition)) {
+                    invalidate();
+                }
+            } else if (i == R.id.item) {
+                Integer position = (Integer) v.getTag(R.id.item_number);
+                if (mAdaptor.getOnItemClickListener() != null) {
+                    adaptor().getOnItemClickListener().onItemClick(mAdaptor.get(position));
+                }
+            }
+        }
     }
 
 }
