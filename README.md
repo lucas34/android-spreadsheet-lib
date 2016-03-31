@@ -17,6 +17,9 @@ compile 'fr.nelaupe:spreadsheet-compiler:1.1.1'
 
 ## Sample
 
+![Result](https://github.com/lucas34/android-spreadsheet-lib/image/sample.gif)
+
+
 Define the datas
 
 ``` java
