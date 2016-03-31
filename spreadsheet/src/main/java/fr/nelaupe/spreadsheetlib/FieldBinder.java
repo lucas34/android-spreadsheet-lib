@@ -11,6 +11,9 @@ public abstract class FieldBinder<TSelf> {
 
     private List<AnnotationFields> fields;
 
+    private boolean mSortingDESC;
+    private int mColumnSortSelected;
+
     public FieldBinder() {
         this.fields = init();
     }
@@ -37,5 +40,23 @@ public abstract class FieldBinder<TSelf> {
         return Collections.unmodifiableList(fields);
     }
 
+    boolean isSortingDESC() {
+        return mSortingDESC;
+    }
 
+    int getSortingColumnSelected() {
+        return mColumnSortSelected;
+    }
+
+    void setIsDESC(boolean mIsDESC) {
+        this.mSortingDESC = mIsDESC;
+    }
+
+    void invertSorting() {
+        this.mSortingDESC = !this.mSortingDESC;
+    }
+
+    public void setColumnSortSelected(int mColumnSortSelected) {
+        this.mColumnSortSelected = mColumnSortSelected;
+    }
 }
