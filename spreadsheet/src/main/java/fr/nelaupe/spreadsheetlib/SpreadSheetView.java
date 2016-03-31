@@ -345,13 +345,9 @@ public class SpreadSheetView extends LinearLayout implements View.OnClickListene
         return mAdaptor;
     }
 
-    public void setAdaptor(SpreadSheetAdaptor adaptor) {
-        if (mAdaptor != null && adaptor.getData().size() == 0) {
-            adaptor.addAll(mAdaptor.getData());
-            adaptor.setConfiguration(mAdaptor.getConfiguration());
-        }
-
+    public <T> void setAdaptor(SpreadSheetAdaptor<T> adaptor) {
         mAdaptor = adaptor;
+        invalidate();
     }
 
     public void setAutoSorting(boolean isAutoSort) {
