@@ -130,15 +130,15 @@ public class SpreadSheetView extends LinearLayout {
      */
     private void addFixedHeader() {
         if (mAdaptor.getFixedViews().size() == 0) return;
-
+        
         TableRow row = new TableRow(getContext());
         row.setLayoutParams(mAdaptor.getConfiguration().getTableLayoutParams());
         row.setGravity(mAdaptor.getConfiguration().getTextGravity());
-        row.setBackgroundColor(mAdaptor.getConfiguration().getHeaderColor());
+        row.setBackgroundColor(mAdaptor.getConfiguration().getHeaderColor(getResources()));
         for (String name : mAdaptor.getFixedViews()) {
             View view = mAdaptor.getFixedHeaderView(name);
-            view.setMinimumWidth(mAdaptor.getConfiguration().getMinFixedRowWidth());
-            view.setMinimumHeight(mAdaptor.getConfiguration().getHeaderRowHeight());
+            view.setMinimumWidth(mAdaptor.getConfiguration().getMinFixedRowWidth(getResources()));
+            view.setMinimumHeight(mAdaptor.getConfiguration().getHeaderRowHeight(getResources()));
             view.setPadding(mAdaptor.getConfiguration().getTextPaddingLeft(), 0, mAdaptor.getConfiguration().getTextPaddingRight(), 0);
             row.addView(view);
         }
@@ -150,7 +150,7 @@ public class SpreadSheetView extends LinearLayout {
         TableRow row = new TableRow(getContext());
         row.setLayoutParams(mAdaptor.getConfiguration().getTableLayoutParams());
         row.setGravity(mAdaptor.getConfiguration().getTextGravity());
-        row.setBackgroundColor(mAdaptor.getConfiguration().getHeaderColor());
+        row.setBackgroundColor(mAdaptor.getConfiguration().getHeaderColor(getResources()));
 
         int column = 0;
 
@@ -160,7 +160,7 @@ public class SpreadSheetView extends LinearLayout {
             button.setOnClickListener(clickListener);
             button.setId(R.id.filter);
             button.setMinimumWidth(mAdaptor.getConfiguration().computeSize(field.getColumnSize()));
-            button.setMinimumHeight(mAdaptor.getConfiguration().getHeaderRowHeight());
+            button.setMinimumHeight(mAdaptor.getConfiguration().getHeaderRowHeight(getResources()));
             button.setPadding(mAdaptor.getConfiguration().getTextPaddingLeft(), 0, mAdaptor.getConfiguration().getTextPaddingRight(), 0);
             button.setTag(R.id.filter_column_position, column);
             column++;
@@ -181,8 +181,8 @@ public class SpreadSheetView extends LinearLayout {
 
         for (String name : mAdaptor.getFixedViews()) {
             View view = mAdaptor.getFixedCellView(name, position);
-            view.setMinimumWidth(mAdaptor.getConfiguration().getMinFixedRowWidth());
-            view.setMinimumHeight(mAdaptor.getConfiguration().getRowHeight());
+            view.setMinimumWidth(mAdaptor.getConfiguration().getMinFixedRowWidth(getResources()));
+            view.setMinimumHeight(mAdaptor.getConfiguration().getRowHeight(getResources()));
             view.setPadding(mAdaptor.getConfiguration().getTextPaddingLeft(), 0, mAdaptor.getConfiguration().getTextPaddingRight(), 0);
             row.addView(view);
         }
@@ -210,7 +210,7 @@ public class SpreadSheetView extends LinearLayout {
                 Object object = binder().getValueAt(field.getFieldName(), resource);
                 View view = mAdaptor.getCellView(field, object);
                 view.setMinimumWidth(mAdaptor.getConfiguration().computeSize(field.getColumnSize()));
-                view.setMinimumHeight(mAdaptor.getConfiguration().getRowHeight());
+                view.setMinimumHeight(mAdaptor.getConfiguration().getRowHeight(getResources()));
                 view.setPadding(mAdaptor.getConfiguration().getTextPaddingLeft(), 0, mAdaptor.getConfiguration().getTextPaddingRight(), 0);
                 row.addView(view);
             }
