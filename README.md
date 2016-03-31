@@ -13,7 +13,6 @@ Automatic creation of two-dimensional scrollable array for Android
 ``` groovy
 compile 'fr.nelaupe:spreadsheet:1.1.1@aar'
 compile 'fr.nelaupe:spreadsheet-compiler:1.1.1'
-compile 'fr.nelaupe:spreadsheet-lib-runtime:1.1.1'   
 ```
 
 ## Sample
