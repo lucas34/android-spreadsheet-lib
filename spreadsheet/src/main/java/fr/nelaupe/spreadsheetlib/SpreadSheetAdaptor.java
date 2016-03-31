@@ -158,9 +158,9 @@ public abstract class SpreadSheetAdaptor<TSelf> {
 
         try {
             Class<TSelf> persistentClass = (Class<TSelf>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-            mBindableClass = (FieldBinder<TSelf>) Class.forName("fr.nelaupe.spreedsheet." + persistentClass.getSimpleName() + "Binding").newInstance();
+            mBindableClass = (FieldBinder<TSelf>) Class.forName("fr.nelaupe.spreadsheetlib."+persistentClass.getSimpleName() + "Binding").newInstance();
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Missing binding class");
+            throw new RuntimeException("Missing binding class", e);
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }

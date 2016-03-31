@@ -14,7 +14,7 @@ targetCompatibility = JavaVersion.VERSION_1_7
 
 dependencies {
     compile project(':spreadsheet-annotation')
-    compile 'com.squareup:javapoet:1.0.0'
+    compile 'com.squareup:javapoet:1.6.1'
 }
 
 //region Maven

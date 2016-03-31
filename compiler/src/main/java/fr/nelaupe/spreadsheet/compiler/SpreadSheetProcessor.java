@@ -1,5 +1,12 @@
 package fr.nelaupe.spreadsheet.compiler;
 
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterizedTypeName;
+import com.squareup.javapoet.TypeName;
+import com.squareup.javapoet.TypeSpec;
+
 import java.io.Writer;
 import java.util.HashSet;
 import java.util.Set;
@@ -8,6 +15,7 @@ import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
@@ -53,40 +61,61 @@ public class SpreadSheetProcessor extends AbstractProcessor {
         try {
             JavaFileObject jfo = processingEnv.getFiler().createSourceFile(output, typeElement);
 
-            Writer writer = jfo.openWriter();
-            writer.write("//Generated class\n");
-            writer.write("package " + packageName + ";\n\n");
-            writer.write("public final class " + generatedClassName + " extends fr.nelaupe.spreadsheetlib.FieldBinder<" + className + "> {\n");
-            writer.write("  \n");
-            writer.write("  public " + className + "Binding() {} \n");
-            writer.write("  \n");
-            writer.write("  @Override\n");
-            writer.write("  protected java.util.List<fr.nelaupe.spreadsheetlib.AnnotationFields> fill() {\n");
-            writer.write("      java.util.List<fr.nelaupe.spreadsheetlib.AnnotationFields> fields = new java.util.ArrayList<>();\n");
+            ClassName entity = ClassName.get(packageName, className);
+
+            ClassName annotationClass = ClassName.get("fr.nelaupe.spreadsheetlib", "AnnotationFields");
+            TypeName listOAnnotations = ParameterizedTypeName.get(ClassName.get("java.util", "List"), annotationClass);
+
+            MethodSpec.Builder fill = MethodSpec.methodBuilder("fill")
+                    .addAnnotation(Override.class)
+                    .returns(listOAnnotations)
+                    .addStatement("$T result = new $T<>()", listOAnnotations, ClassName.get("java.util", "ArrayList"))
+                    .addModifiers(Modifier.PROTECTED);
+
             for (Element field : env.getElementsAnnotatedWith(SpreadSheetCell.class)) {
                 if (field.getEnclosingElement().getSimpleName().toString().equals(className)) {
                     SpreadSheetCell annotation = field.getAnnotation(SpreadSheetCell.class);
-                    writer.write("      fields.add(new fr.nelaupe.spreadsheetlib.AnnotationFields(\"" + annotation.name() + "\", " + annotation.size() + ", " + annotation.position() + ", \"" + field.getSimpleName() + "\", false));\n");
+                    fill.addStatement("result.add(new $T($S, $L, $L, $S, $L))", annotationClass, annotation.name(),  annotation.size(), annotation.position(), field.getSimpleName(), false);
                 }
             }
-            writer.write("      return fields;\n");
-            writer.write("  }\n");
-            writer.write("  \n\n");
-            writer.write("  @Override\n");
-            writer.write("  public Object getValueAt(String fieldName, " + className + " data) {\n");
-            writer.write("      switch (fieldName) {\n");
+            fill.addStatement("return result");
+
+
+            MethodSpec.Builder getValueAt = MethodSpec.methodBuilder("getValueAt")
+                    .addParameter(String.class, "fieldName")
+                    .addParameter(entity, "data")
+                    .addAnnotation(Override.class)
+                    .returns(Object.class)
+                    .addModifiers(Modifier.PUBLIC);
+
+            getValueAt.beginControlFlow("switch(fieldName)");
             for (Element field : env.getElementsAnnotatedWith(SpreadSheetCell.class)) {
-                writer.write("  \n");
                 if (field.getEnclosingElement().getSimpleName().toString().equals(className)) {
-                    writer.write("          case \"" + field.getSimpleName() + "\" : {\n");
-                    writer.write("              return data." + field.getSimpleName() + ";\n");
-                    writer.write("          }\n");
+                    SpreadSheetCell annotation = field.getAnnotation(SpreadSheetCell.class);
+                    getValueAt.beginControlFlow("case $S : ", field.getSimpleName());
+                    getValueAt.addStatement("return data.$L", field.getSimpleName());
+                    getValueAt.endControlFlow();
                 }
             }
-            writer.write("      }\n");
-            writer.write("      return null;\n");
-            writer.write("  }\n");
-            writer.write("}\n");
+
+            getValueAt.beginControlFlow("default : ");
+            getValueAt.addStatement("return null");
+            getValueAt.endControlFlow();
+
+            getValueAt.endControlFlow();
+
+            TypeName parameterizedTypeName = ParameterizedTypeName.get(ClassName.get("fr.nelaupe.spreadsheetlib", "FieldBinder"), entity);
+            TypeSpec hello = TypeSpec.classBuilder(generatedClassName)
+                    .superclass(parameterizedTypeName)
+                    .addMethod(fill.build())
+                    .addMethod(getValueAt.build())
+                    .build();
+
+            JavaFile javaFile = JavaFile.builder("fr.nelaupe.spreadsheetlib", hello)
+                    .build();
+
+            Writer writer = jfo.openWriter();
+            javaFile.writeTo(writer);
             writer.flush();
             writer.close();
 

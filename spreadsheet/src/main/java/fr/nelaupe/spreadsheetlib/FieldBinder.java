@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by lucas34990 on 16/2/16.
  */
-public abstract class FieldBinder<TSelf> {
+abstract class FieldBinder<TSelf> {
 
     private List<AnnotationFields> fields;
 
