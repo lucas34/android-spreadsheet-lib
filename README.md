@@ -12,9 +12,23 @@ The library requires at least Android 1.6 Donut (API level 4).
 
 **Gradle dependencies**
 
+Project :
 ``` groovy
-compile 'fr.nelaupe:spreadsheet:1.1.1@aar'
-compile 'fr.nelaupe:spreadsheet-compiler:1.1.1'
+buildscript {
+    dependencies {
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        ...
+```
+
+Module :
+``` groovy
+apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
+
+dependencies {
+    compile 'fr.nelaupe:spreadsheet:1.1.1@aar'
+    compile 'fr.nelaupe:spreadsheet-compiler:1.1.1'
+    ...
 ```
 
 ## Sample
