@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.test.spreadsheet.Person;
+
 import org.fluttercode.datafactory.impl.DataFactory;
 
 import java.text.SimpleDateFormat;

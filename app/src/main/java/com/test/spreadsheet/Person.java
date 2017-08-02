@@ -1,13 +1,14 @@
 /**
  * Copyright
  */
-package fr.nelaupe.spreedsheet;
+package com.test.spreadsheet;
 
 import org.fluttercode.datafactory.impl.DataFactory;
 
 import java.text.SimpleDateFormat;
 
 import fr.nelaupe.spreadsheetlib.SpreadSheetCell;
+import fr.nelaupe.spreedsheet.CustomCompany;
 
 /**
  * Created with IntelliJ
