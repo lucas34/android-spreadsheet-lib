@@ -47,8 +47,9 @@ public class SpreadSheetProcessor extends AbstractProcessor {
         }
 
         for (TypeElement key : classesWithFieldThatContainsAnnotations) {
-            System.out.println("Generation of the binder for class : " + key);
-            generateBinder(env, key.getSimpleName().toString(), "fr.nelaupe.spreedsheet", key);
+            String packageName = key.getEnclosingElement().toString();
+            String className = key.getSimpleName().toString();
+            generateBinder(env, className, packageName, key);
         }
 
         return true;
