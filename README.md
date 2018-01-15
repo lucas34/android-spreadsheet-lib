@@ -1,5 +1,7 @@
 # Android Spreadsheet
 
+## This library is deprecated and will no longer receive update.
+
 <img src='https://travis-ci.org/lucas34/android-spreadsheet-lib.svg?branch=master'>
 
 Automatic creation of two-dimensional scrollable spreadsheet for Android.
